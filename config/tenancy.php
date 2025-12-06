@@ -16,10 +16,13 @@ return [
      *
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
-    'central_domains' => [
+   'central_domains' => [
         '127.0.0.1',
+        '127.0.0.1:8000',
         'localhost',
+        'localhost:8000',
         'aplicacao.local',
+        'aplicacao.local:8000', // A variação com porta é essencial
     ],
 
     'middleware' => [
