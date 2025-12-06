@@ -15,7 +15,10 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     {
         return [
             'id',
-            // Adicione outras colunas se tiver criado na migration de tenants
+            'nome',
+            'plano',
+            'status',
+            'cnpj',
         ];
     }
 }

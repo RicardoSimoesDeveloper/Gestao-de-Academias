@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Stancl\Tenancy\Database\Models\Domain;
-use Stancl\Tenancy\Database\Models\Tenant;
+use App\Models\Tenant;
 
 return [
     'tenant_model' => Tenant::class,
@@ -19,10 +19,11 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
+        'aplicacao.local',
     ],
 
     'middleware' => [
-        'web', // Isso garante que sessões, cookies e o Inertia funcionem
+        'web',
         Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
         Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
     ],

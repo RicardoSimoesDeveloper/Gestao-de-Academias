@@ -17,11 +17,13 @@ class CreateTenantsTable extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->string('id')->primary();
+            $table->string('nome', 30)->nullable();
+            $table->string('plano', 30)->default('gratis');
+            $table->string('status', 30)->default('ativo');
+            $table->string('cnpj', 14)->nullable();
 
-            // your custom columns may go here
-
-            $table->timestamps();
             $table->json('data')->nullable();
+            $table->timestamps();
         });
     }
 
