@@ -16,26 +16,22 @@ class AuthController extends Controller
         ]);
     }
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'senha' => ['required'],
+        // Valida inputs
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required', // Espera 'password' do front
         ]);
 
-        // Mapeamento manual: O Laravel espera a chave 'password' para validar
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->senha 
-        ];
-
+        // Tenta logar (Padrão Laravel)
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended('/dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'As credenciais fornecidas estão incorretas.',
+            'email' => 'Credenciais incorretas.',
         ])->onlyInput('email');
     }
 

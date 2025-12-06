@@ -1,68 +1,40 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
-        <nav class="bg-white shadow mb-8">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <span class="text-xl font-bold text-gray-800">Painel Master (Central)</span>
-                    </div>
-                    <div class="flex items-center">
-                        <button @click="logout" class="text-red-600 hover:text-red-800 font-bold text-sm">
-                            Sair do Sistema
-                        </button>
-                    </div>
-                </div>
+    <CentralLayout title="Dashboard Geral">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+                <p class="text-sm text-gray-500 font-medium">Total de Academias</p>
+                <p class="text-3xl font-bold text-gray-800">{{ totalTenants }}</p>
             </div>
-        </nav>
+            
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
+                <p class="text-sm text-gray-500 font-medium">Novas este mês</p>
+                <p class="text-3xl font-bold text-gray-800">2</p> </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">Academias Cadastradas</h1>
-                <a href="/admin/nova-academia" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    + Nova Academia
-                </a>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-purple-500">
+                <p class="text-sm text-gray-500 font-medium">Planos Ativos</p>
+                <p class="text-3xl font-bold text-gray-800">100%</p>
             </div>
 
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subdomínio (ID)</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domínio de Acesso</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="tenant in tenants" :key="tenant.id">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ tenant.name }}</div>
-                                <div class="text-sm text-gray-500">{{ tenant.plan }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ tenant.id }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
-                                <a :href="'http://' + tenant.domains[0].domain + ':8000'" target="_blank" class="hover:underline">
-                                    {{ tenant.domains[0].domain }}
-                                </a>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button class="text-indigo-600 hover:text-indigo-900">Gerenciar</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
+                <p class="text-sm text-gray-500 font-medium">Alunos Totais</p>
+                <p class="text-3xl font-bold text-gray-800">--</p>
+                <p class="text-xs text-gray-400">Em desenvolvimento</p>
             </div>
         </div>
-    </div>
+
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="font-bold text-gray-700 mb-4">Crescimento de Unidades (2025)</h3>
+            <div class="h-64 bg-gray-50 flex items-center justify-center border-2 border-dashed border-gray-200 rounded">
+                <span class="text-gray-400">Gráfico de desempenho será exibido aqui</span>
+            </div>
+        </div>
+    </CentralLayout>
 </template>
 
 <script setup>
-import { router } from '@inertiajs/vue3'; // Importe o router
-defineProps({ tenants: Array });
+import CentralLayout from '@/Layouts/CentralLayout.vue';
 
-const logout = () => {
-    router.post('/logout');
-};
+defineProps({
+    totalTenants: Number
+});
 </script>

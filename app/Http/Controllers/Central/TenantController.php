@@ -9,21 +9,39 @@ use Inertia\Inertia;
 
 class TenantController extends Controller
 {
-    // Dashboard Central (Lista de Academias)
-  public function index()
+    /**
+     * NOVO: Dashboard Geral (Cards e Métricas)
+     */
+    public function dashboard()
     {
-        return Inertia::render('Central/Index', [ // <--- Tem que ser Central/Index
+        return Inertia::render('Central/Index', [
+            // Conta quantos tenants existem para mostrar no card
+            'totalTenants' => Tenant::count()
+        ]);
+    }
+
+    /**
+     * AJUSTADO: Lista de Academias (Tabela)
+     * Agora aponta para a pasta 'Tenants/List' que criamos
+     */
+    public function index()
+    {
+        return Inertia::render('Central/Tenants/List', [
             'tenants' => Tenant::with('domains')->get()
         ]);
     }
 
-    // Formulário de Criação
+    /**
+     * Formulário de Criação (Mantido)
+     */
     public function create()
     {
-        // CAMINHO AJUSTADO: Agora aponta direto para Central/Create
         return Inertia::render('Central/Create');
     }
 
+    /**
+     * Salvar Nova Academia (Mantido com pequeno ajuste no redirect)
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -33,6 +51,8 @@ class TenantController extends Controller
             'senha_admin' => 'required|min:6',
         ]);
 
+        // 1. Ao rodar o CREATE aqui, o pacote já dispara os eventos
+        // que criam o banco e rodam as migrations automaticamente!
         $tenant = Tenant::create([
             'id' => $request->id,
             'name' => $request->nome,
@@ -43,17 +63,67 @@ class TenantController extends Controller
             'domain' => $request->id . '.aplicacao.local'
         ]);
 
-        \Stancl\Tenancy\Jobs\CreateDatabase::dispatchSync($tenant);
-        \Stancl\Tenancy\Jobs\MigrateDatabase::dispatchSync($tenant);
+        // --- REMOVA OU COMENTE ESTAS LINHAS ABAIXO ---
+        // \Stancl\Tenancy\Jobs\CreateDatabase::dispatchSync($tenant); <--- CULPADO
+        // \Stancl\Tenancy\Jobs\MigrateDatabase::dispatchSync($tenant); <--- CULPADO
         
+        // Mantemos a criação do usuário, pois isso é customizado nosso
         $tenant->run(function () use ($request) {
             \App\Models\User::create([
                 'nome' => 'Administrador',
                 'email' => $request->email_admin,
-                'senha' => $request->senha_admin,
+                'password' => $request->senha_admin,
             ]);
         });
 
-        return redirect()->route('central.dashboard')->with('success', 'Academia criada com sucesso!');
+        return redirect()->route('tenants.index')->with('success', 'Academia criada com sucesso!');
+    }
+
+    // ... métodos dashboard, index, create, store já existem ...
+
+    /**
+     * Tela de Edição
+     */
+    public function edit($id)
+    {
+        $tenant = Tenant::with('domains')->findOrFail($id);
+
+        return Inertia::render('Central/Tenants/Edit', [
+            'tenant' => $tenant
+        ]);
+    }
+
+    /**
+     * Atualizar Dados
+     */
+    public function update(Request $request, $id)
+    {
+        $tenant = Tenant::findOrFail($id);
+
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            // Não validamos ID nem Email/Senha aqui, pois mudar isso é complexo agora
+        ]);
+
+        // Atualiza apenas o nome de exibição na tabela central
+        $tenant->update([
+            'name' => $request->nome,
+        ]);
+
+        return redirect()->route('tenants.index')->with('success', 'Academia atualizada com sucesso!');
+    }
+
+    /**
+     * Excluir Academia e Banco de Dados
+     */
+    public function destroy($id)
+    {
+        $tenant = Tenant::findOrFail($id);
+        
+        // O pacote Stancl/Tenancy já se encarrega de deletar o banco de dados
+        // quando deletamos o model, se configurado corretamente.
+        $tenant->delete();
+
+        return redirect()->route('tenants.index')->with('success', 'Academia e banco de dados excluídos!');
     }
 }

@@ -7,33 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
-Route::get('/debug-senha', function () {
-    $email = 'admin@central.com';
-    $senhaTentada = '123456';
-    
-    // 1. Busca Usuário
-    // Usamos makeVisible para ver o campo 'senha' e 'password' se existirem
-    $user = User::where('email', $email)->first(); 
-
-    if (!$user) {
-        return "ERRO: Usuário $email não encontrado no banco!";
-    }
-
-    $hashNoBanco = $user->senha;
-
-    // 2. Testa a senha manualmente
-    $bateu = Hash::check($senhaTentada, $hashNoBanco);
-
-    return [
-        '1. Usuario Encontrado' => $user->nome,
-        '2. Email' => $user->email,
-        '3. Hash que esta no Banco' => $hashNoBanco,
-        '4. Senha que estamos testando' => $senhaTentada,
-        '5. O Hash::check diz que bate?' => $bateu ? 'SIM, A SENHA ESTÁ CERTA' : 'NÃO, A SENHA ESTÁ ERRADA',
-        '6. Configuracao do Model' => $user->getCasts(),
-    ];
-});
+use App\Http\Controllers\Central\ReportController;
 
 // --- ROTA RAIZ (Lógica de Redirecionamento) ---
 Route::get('/', function () {
@@ -53,11 +27,19 @@ Route::post('/logout', [AuthController::class, 'destroy'])->name('central.logout
 // --- ÁREA ADMINISTRATIVA (Protegida) ---
 Route::middleware('auth')->prefix('admin')->group(function () {
     
-    // Dashboard (Lista de Academias)
-    Route::get('/dashboard', [TenantController::class, 'index'])->name('central.dashboard');
+    // Dashboard (Visão Geral)
+    Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('central.dashboard');
     
-    // Criação de Academias
+    // Academias (Lista e CRUD)
+    Route::get('/academias', [TenantController::class, 'index'])->name('tenants.index');
     Route::get('/nova-academia', [TenantController::class, 'create'])->name('tenants.create');
     Route::post('/nova-academia', [TenantController::class, 'store'])->name('tenants.store');
+
+    Route::get('/academias/{id}/editar', [TenantController::class, 'edit'])->name('tenants.edit');
+    Route::put('/academias/{id}', [TenantController::class, 'update'])->name('tenants.update');
+    Route::delete('/academias/{id}', [TenantController::class, 'destroy'])->name('tenants.destroy');
+
+    // Relatórios
+     Route::get('/relatorios', [ReportController::class, 'index'])->name('central.reports');
 
 });
