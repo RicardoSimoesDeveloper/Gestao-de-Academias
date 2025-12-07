@@ -1,105 +1,45 @@
-<script setup>
-import { ref } from 'vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import TenantLayout from '@/Layouts/TenantLayout.vue'; 
-import { useToast } from '@/Composables/toast'; // Assumindo que você tem um sistema de toast/notificação
-
-const form = useForm({
-    nome: '',
-    email: '',
-    cpf: '',
-    data_nascimento: '',
-    status: 'ativo',
-});
-
-const submit = () => {
-    form.post(route('alunos.store'), {
-        onSuccess: () => {
-            // Limpa o formulário após o sucesso e mostra notificação
-            form.reset();
-            useToast().success('Aluno cadastrado!');
-        },
-        onError: (errors) => {
-            console.error(errors);
-            useToast().error('Verifique os dados do formulário.');
-        },
-    });
-};
-
-const statusOptions = ref([
-    { value: 'ativo', label: 'Ativo' },
-    { value: 'inativo', label: 'Inativo' },
-    { value: 'suspenso', label: 'Suspenso' },
-]);
-</script>
-
 <template>
-    <Head title="Novo Aluno" />
-
-    <TenantLayout title="Cadastrar Novo Aluno">
-        <div class="max-w-4xl mx-auto bg-white shadow rounded-lg p-8">
-            <form @submit.prevent="submit">
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <CentralLayout title="Nova Academia">
+        <div class="bg-white p-6 rounded shadow max-w-3xl mx-auto">
+            <h2 class="text-lg font-bold mb-4 border-b pb-2">Dados da Franquia</h2>
+            <form @submit.prevent="form.post('/admin/nova-academia')">
+                <div class="mb-4">
+                    <label class="block font-bold mb-1">ID (Subdomínio)</label>
+                    <input v-model="form.id" type="text" class="w-full border p-2 rounded" placeholder="Ex: ironberg">
+                    <p class="text-xs text-gray-500 mt-1">O acesso será: {{ form.id }}.aplicacao.local</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block font-bold mb-1">Nome</label>
+                    <input v-model="form.name" class="w-full border p-2 rounded">
+                </div>
+                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
-                        <input id="nome" v-model="form.nome" type="text" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                            :class="{'border-red-500': form.errors.nome}"
-                            required>
-                        <div v-if="form.errors.nome" class="text-xs text-red-500 mt-1">{{ form.errors.nome }}</div>
+                        <label class="block font-bold mb-1">Email Admin</label>
+                        <input v-model="form.email_admin" type="email" class="w-full border p-2 rounded">
                     </div>
-
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
-                        <input id="email" v-model="form.email" type="email" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                            :class="{'border-red-500': form.errors.email}"
-                            required>
-                        <div v-if="form.errors.email" class="text-xs text-red-500 mt-1">{{ form.errors.email }}</div>
+                        <label class="block font-bold mb-1">Senha Inicial</label>
+                        <input v-model="form.senha_admin" type="text" class="w-full border p-2 rounded">
                     </div>
-
-                    <div>
-                        <label for="cpf" class="block text-sm font-medium text-gray-700">CPF</label>
-                        <input id="cpf" v-model="form.cpf" type="text" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                            :class="{'border-red-500': form.errors.cpf}">
-                        <div v-if="form.errors.cpf" class="text-xs text-red-500 mt-1">{{ form.errors.cpf }}</div>
-                    </div>
-
-                    <div>
-                        <label for="data_nascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento</label>
-                        <input id="data_nascimento" v-model="form.data_nascimento" type="date" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                            :class="{'border-red-500': form.errors.data_nascimento}">
-                        <div v-if="form.errors.data_nascimento" class="text-xs text-red-500 mt-1">{{ form.errors.data_nascimento }}</div>
-                    </div>
-
-                    <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700">Status <span class="text-red-500">*</span></label>
-                        <select id="status" v-model="form.status" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                            :class="{'border-red-500': form.errors.status}"
-                            required>
-                            <option v-for="option in statusOptions" :key="option.value" :value="option.value">
-                                {{ option.label }}
-                            </option>
-                        </select>
-                        <div v-if="form.errors.status" class="text-xs text-red-500 mt-1">{{ form.errors.status }}</div>
-                    </div>
-
                 </div>
 
-                <div class="mt-8 pt-5 border-t border-gray-200 flex justify-end gap-3">
-                    <Link :href="route('alunos.index')" class="px-4 py-2 text-gray-700 rounded-md hover:bg-gray-100 transition">
-                        Cancelar
-                    </Link>
-                    <button type="submit" :disabled="form.processing"
-                        class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition disabled:opacity-50">
-                        {{ form.processing ? 'Salvando...' : 'Cadastrar Aluno' }}
-                    </button>
+                <div class="flex justify-end gap-3 mt-6">
+                    <Link href="/admin/academias" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancelar</Link>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Criar Unidade</button>
                 </div>
             </form>
         </div>
-    </TenantLayout>
+    </CentralLayout>
 </template>
+
+<script setup>
+import CentralLayout from '@/Layouts/CentralLayout.vue'; // <--- Importe o layout
+import { useForm, Link } from '@inertiajs/vue3';
+
+const form = useForm({
+    id: '',
+    name: '',
+    email_admin: '',
+    senha_admin: ''
+});
+</script>

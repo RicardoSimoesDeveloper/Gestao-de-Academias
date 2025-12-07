@@ -7,6 +7,7 @@ use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class TenantController extends Controller
 {
@@ -66,39 +67,43 @@ class TenantController extends Controller
      */
     public function store(Request $request)
     {
+        // 1. Validação
         $request->validate([
-            'id' => 'required|alpha_dash|unique:tenants,id',
-            'nome' => 'required|string|max:255',
-            'email_admin' => 'required|email',
-            'senha_admin' => 'required|min:6',
+            'id' => ['required', 'string', 'max:255', 'unique:tenants,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'email_admin' => ['required', 'email'],
+            'senha_admin' => ['required', 'string', 'min:6'],
         ]);
 
-        // 1. Ao rodar o CREATE aqui, o pacote já dispara os eventos
-        // que criam o banco e rodam as migrations automaticamente!
+        // 2. Definir o nome do domínio (Ex: sportfit.aplicacao.local)
+        $appDomain = env('APP_DOMAIN'); // Ex: aplicacao.local
+        $subdomain = $request->id;      // Ex: sportfit
+        $domain = $subdomain . '.' . $appDomain; // sportfit.aplicacao.local
+
+        // 3. Criação do Tenant (no banco central)
         $tenant = Tenant::create([
-            'id' => $request->id,
-            'name' => $request->nome,
-            'plan' => 'free',
+            'id' => $subdomain,
+            'name' => $request->name, // Garante que o nome seja salvo nos dados do tenant
         ]);
 
+        // 🚨 PASSO ESSENCIAL: Vincular o Domínio ao Tenant
+        // Isso cria o registro na tabela `domains`
         $tenant->domains()->create([
-            'domain' => $request->id . '.aplicacao.local'
+            'domain' => $domain,
         ]);
 
-        // --- REMOVA OU COMENTE ESTAS LINHAS ABAIXO ---
-        // \Stancl\Tenancy\Jobs\CreateDatabase::dispatchSync($tenant); <--- CULPADO
-        // \Stancl\Tenancy\Jobs\MigrateDatabase::dispatchSync($tenant); <--- CULPADO
-        
-        // Mantemos a criação do usuário, pois isso é customizado nosso
+        // 4. Configuração do Tenant (Migrations e Usuário Admin)
         $tenant->run(function () use ($request) {
+            // Criação do usuário admin no banco de dados do Tenant
             \App\Models\User::create([
-                'nome' => 'Administrador',
+                'name' => 'Administrador', 
                 'email' => $request->email_admin,
-                'password' => $request->senha_admin,
+                'password' => Hash::make($request->senha_admin), 
             ]);
         });
 
-        return redirect()->route('tenants.index')->with('success', 'Academia criada com sucesso!');
+        // 5. Redirecionamento
+        return redirect()->route('tenants.index')->with('success', 'Academia criada e domínio configurado com sucesso!');
     }
 
     // ... métodos dashboard, index, create, store já existem ...

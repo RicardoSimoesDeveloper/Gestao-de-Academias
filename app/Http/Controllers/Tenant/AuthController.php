@@ -16,22 +16,27 @@ class AuthController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+public function store(Request $request)
     {
-        // Valida inputs
+        // 1. Validação dos dados
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required', // Espera 'password' do front
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        // Tenta logar (Padrão Laravel)
-        if (Auth::attempt($credentials)) {
+        // 2. Tenta autenticar o usuário no banco de dados do Tenant
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            
+            // Regenera a sessão para prevenir ataques de fixação de sessão
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+
+            // 3. Redireciona para o Dashboard
+            return redirect()->intended(route('dashboard'));
         }
 
+        // 4. Falha na autenticação: Retorna com erro
         return back()->withErrors([
-            'email' => 'Credenciais incorretas.',
+            'email' => 'As credenciais fornecidas não correspondem aos nossos registros.',
         ])->onlyInput('email');
     }
 
