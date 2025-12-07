@@ -33,7 +33,7 @@ Route::middleware([
     // --- ROTAS PROTEGIDAS ---
     Route::middleware('auth')->group(function () {
         
-        Route::get('/', function () {
+       Route::get('/', function () {
             return redirect('/dashboard');
         });
 
