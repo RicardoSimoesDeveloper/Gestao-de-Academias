@@ -65,16 +65,47 @@
 </template>
 
 <script setup>
-    import CentralLayout from '@/Layouts/CentralLayout.vue';
-    import { Link, router } from '@inertiajs/vue3';
+import CentralLayout from '@/Layouts/CentralLayout.vue';
+import { Link, router } from '@inertiajs/vue3';
+import Swal from 'sweetalert2'; // <--- Importação do SweetAlert
 
-    defineProps({
-        tenants: Array
-    });
+defineProps({
+    tenants: Array
+});
 
-    const confirmarExclusao = (tenant) => {
-        if (confirm(`Tem certeza que deseja excluir a academia "${tenant.name}"?\n\nISSO APAGARÁ O BANCO DE DADOS E TODOS OS ALUNOS DELA PERMANENTEMENTE!`)) {
-            router.delete(`/admin/academias/${tenant.id}`);
+const confirmarExclusao = (tenant) => {
+    // Dispara o Modal Bonito
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: `Você está prestes a excluir a academia "${tenant.name}" e apagar TODO o banco de dados dela.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33', // Vermelho para perigo
+        cancelButtonColor: '#3085d6', // Azul para cancelar
+        confirmButtonText: 'Sim, excluir tudo!',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true // Inverte a ordem para evitar cliques acidentais
+    }).then((result) => {
+        // Só executa se o usuário clicou em "Sim"
+        if (result.isConfirmed) {
+            router.delete(`/admin/academias/${tenant.id}`, {
+                onSuccess: () => {
+                    // Mensagem de Sucesso após apagar
+                    Swal.fire(
+                        'Excluído!',
+                        'A academia e os dados foram removidos.',
+                        'success'
+                    );
+                },
+                onError: () => {
+                    Swal.fire(
+                        'Erro!',
+                        'Ocorreu um problema ao tentar excluir.',
+                        'error'
+                    );
+                }
+            });
         }
-    };
+    });
+};
 </script>

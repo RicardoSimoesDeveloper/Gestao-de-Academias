@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class TenantController extends Controller
 {
@@ -86,10 +87,11 @@ class TenantController extends Controller
      */
     public function edit($id)
     {
+        // O findOrFail garante que se o ID não existir, dá erro 404 antes de carregar a tela
         $tenant = Tenant::with('domains')->findOrFail($id);
 
         return Inertia::render('Central/Tenants/Edit', [
-            'tenant' => $tenant
+            'tenant' => $tenant // <--- Estamos enviando a variável 'tenant' aqui
         ]);
     }
 
@@ -99,18 +101,13 @@ class TenantController extends Controller
     public function update(Request $request, $id)
     {
         $tenant = Tenant::findOrFail($id);
+        $request->validate(['nome' => 'required|string|max:255']);
 
-        $request->validate([
-            'nome' => 'required|string|max:255',
-            // Não validamos ID nem Email/Senha aqui, pois mudar isso é complexo agora
-        ]);
+        $tenant->update(['name' => $request->nome]);
 
-        // Atualiza apenas o nome de exibição na tabela central
-        $tenant->update([
-            'name' => $request->nome,
-        ]);
-
-        return redirect()->route('tenants.index')->with('success', 'Academia atualizada com sucesso!');
+        // O SEGREDO ESTÁ AQUI NO FINAL: '303'
+        return redirect()->route('tenants.index', [], 303)
+                        ->with('success', 'Academia atualizada com sucesso!');
     }
 
     /**
@@ -120,10 +117,12 @@ class TenantController extends Controller
     {
         $tenant = Tenant::findOrFail($id);
         
-        // O pacote Stancl/Tenancy já se encarrega de deletar o banco de dados
-        // quando deletamos o model, se configurado corretamente.
+        // Deleta registro e banco de dados
         $tenant->delete();
 
-        return redirect()->route('tenants.index')->with('success', 'Academia e banco de dados excluídos!');
+        // A CORREÇÃO MÁGICA ESTÁ AQUI: ', [], 303'
+        // Isso força o navegador a transformar o DELETE em GET ao redirecionar
+        return redirect()->route('tenants.index', [], 303)
+                        ->with('success', 'Academia e banco de dados excluídos!');
     }
 }
