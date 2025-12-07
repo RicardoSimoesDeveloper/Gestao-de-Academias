@@ -2,7 +2,12 @@
     <CentralLayout title="Gestão de Unidades">
         <div class="flex justify-between items-center mb-6">
             <div class="relative">
-                <input type="text" placeholder="Buscar academia..." class="pl-10 pr-4 py-2 border rounded-lg w-64">
+                <input 
+                    v-model="search" 
+                    type="text" 
+                    placeholder="Buscar por Nome ou ID..." 
+                    class="pl-10 pr-4 py-2 border rounded-lg w-64"
+                >
                 <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
             
@@ -28,15 +33,19 @@
                         <td class="p-4 text-gray-500 text-sm">#{{ tenant.id }}</td>
                         <td class="p-4 font-medium text-gray-800">{{ tenant.name }}</td>
                         <td class="p-4">
-                            <a :href="'http://' + tenant.domains[0].domain + ':8000'" target="_blank" class="text-blue-600 hover:underline flex items-center">
+                            <a v-if="tenant.domains && tenant.domains.length > 0" 
+                               :href="'http://' + tenant.domains[0].domain + ':8000'" 
+                               target="_blank" 
+                               class="text-blue-600 hover:underline flex items-center">
                                 {{ tenant.domains[0].domain }}
                                 <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                             </a>
+                            <span v-else class="text-gray-400 text-xs">Sem domínio</span>
                         </td>
                         <td class="p-4">
                             <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Free</span>
                         </td>
-                       <td class="p-4 text-right flex justify-end gap-2">
+                        <td class="p-4 text-right flex justify-end gap-2">
                             <Link 
                                 :href="`/admin/academias/${tenant.id}/editar`" 
                                 class="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center"
@@ -58,7 +67,7 @@
             </table>
             
             <div v-if="tenants.length === 0" class="p-8 text-center text-gray-500">
-                Nenhuma academia cadastrada.
+                Nenhuma academia encontrada.
             </div>
         </div>
     </CentralLayout>
@@ -67,42 +76,47 @@
 <script setup>
 import CentralLayout from '@/Layouts/CentralLayout.vue';
 import { Link, router } from '@inertiajs/vue3';
-import Swal from 'sweetalert2'; // <--- Importação do SweetAlert
+import Swal from 'sweetalert2';
+import { ref, watch } from 'vue';
+import debounce from 'lodash/debounce'; // Padrão no Laravel/Inertia
 
-defineProps({
-    tenants: Array
+// Recebe tenants e filters (para manter o que foi digitado)
+const props = defineProps({
+    tenants: Array,
+    filters: Object 
 });
 
+// Variável reativa da busca
+const search = ref(props.filters?.search || '');
+
+// Observa a digitação e atualiza a lista automaticamente
+watch(search, debounce((value) => {
+    router.get('/admin/academias', { search: value }, {
+        preserveState: true, // Mantém a posição da tela
+        replace: true,       // Não suja o histórico do navegador
+        only: ['tenants']    // Otimização: carrega só os dados da tabela
+    });
+}, 300)); // Espera 300ms após parar de digitar
+
 const confirmarExclusao = (tenant) => {
-    // Dispara o Modal Bonito
     Swal.fire({
         title: 'Tem certeza?',
         text: `Você está prestes a excluir a academia "${tenant.name}" e apagar TODO o banco de dados dela.`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d33', // Vermelho para perigo
-        cancelButtonColor: '#3085d6', // Azul para cancelar
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
         confirmButtonText: 'Sim, excluir tudo!',
         cancelButtonText: 'Cancelar',
-        reverseButtons: true // Inverte a ordem para evitar cliques acidentais
+        reverseButtons: true
     }).then((result) => {
-        // Só executa se o usuário clicou em "Sim"
         if (result.isConfirmed) {
             router.delete(`/admin/academias/${tenant.id}`, {
                 onSuccess: () => {
-                    // Mensagem de Sucesso após apagar
-                    Swal.fire(
-                        'Excluído!',
-                        'A academia e os dados foram removidos.',
-                        'success'
-                    );
+                    Swal.fire('Excluído!', 'A academia e os dados foram removidos.', 'success');
                 },
                 onError: () => {
-                    Swal.fire(
-                        'Erro!',
-                        'Ocorreu um problema ao tentar excluir.',
-                        'error'
-                    );
+                    Swal.fire('Erro!', 'Ocorreu um problema ao tentar excluir.', 'error');
                 }
             });
         }

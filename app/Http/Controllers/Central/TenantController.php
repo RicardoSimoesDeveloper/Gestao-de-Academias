@@ -25,10 +25,31 @@ class TenantController extends Controller
      * AJUSTADO: Lista de Academias (Tabela)
      * Agora aponta para a pasta 'Tenants/List' que criamos
      */
-    public function index()
+   // app/Http/Controllers/Central/TenantController.php
+
+    // app/Http/Controllers/Central/TenantController.php
+
+    public function index(Request $request)
     {
+        $query = Tenant::with('domains');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            
+            $query->where(function($q) use ($search) {
+                
+                // 1. Busca pelo ID (agora 'começa com' a digitação)
+                $q->where('id', 'LIKE', "{$search}%") 
+                
+                // 2. Busca pelo Nome (agora 'começa com' a digitação)
+                ->orWhere('nome', 'LIKE', "{$search}%"); 
+                // ^^^ REMOVEMOS O '%' DO INÍCIO (era "%{$search}%")
+            });
+        }
+
         return Inertia::render('Central/Tenants/List', [
-            'tenants' => Tenant::with('domains')->get()
+            'tenants' => $query->latest()->get(),
+            'filters' => $request->only(['search'])
         ]);
     }
 
