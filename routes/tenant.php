@@ -33,12 +33,12 @@ Route::middleware([
     // --- ROTAS PROTEGIDAS ---
     Route::middleware('auth')->group(function () {
         
-        Route::get('/dashboard', function () {
-            return Inertia::render('Tenant/Dashboard', [
-                'user' => Auth::user(), 
-                'academia' => tenant('name') 
-            ]);
-        })->name('dashboard');
+        Route::get('/', function () {
+            return redirect('/dashboard');
+        });
+
+        // 🚨 NOVO: Conecta a rota do Dashboard ao Controller
+        Route::get('/dashboard', [App\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
 
         // Rotas de Alunos
         Route::get('/alunos', [App\Http\Controllers\Tenant\AlunoController::class, 'index'])->name('alunos.index');
