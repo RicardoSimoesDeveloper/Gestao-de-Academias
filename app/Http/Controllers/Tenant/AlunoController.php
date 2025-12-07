@@ -53,7 +53,7 @@ class AlunoController extends Controller
         Aluno::create($data);
 
         // Redireciona de volta para a listagem com uma mensagem de sucesso
-        return redirect()->route('alunos.index')->with('success', 'Aluno cadastrado com sucesso!');
+        return redirect('/alunos')->with('success', 'Aluno cadastrado com sucesso!');
     }
 
     public function edit(Aluno $aluno)
@@ -80,7 +80,7 @@ class AlunoController extends Controller
 
         $aluno->update($data);
 
-        return redirect()->route('alunos.index')->with('success', 'Dados do aluno atualizados!');
+        return redirect('/alunos')->with('success', 'Aluno atualizado com sucesso!');
     }
 
     /**
@@ -91,7 +91,7 @@ class AlunoController extends Controller
         // O método delete() do Eloquent com SoftDeletes apenas preenche a coluna deleted_at.
         $aluno->delete();
 
-        return redirect()->route('alunos.index')->with('success', 'Aluno excluído (movido para lixeira).');
+       return redirect('/alunos')->with('success', 'Aluno excluido com sucesso!');
     }
     
     /**
@@ -104,6 +104,6 @@ class AlunoController extends Controller
         $aluno = Aluno::withTrashed()->findOrFail($id);
         $aluno->restore();
 
-        return redirect()->route('alunos.index')->with('success', 'Aluno restaurado com sucesso!');
+       return redirect('/alunos')->with('success', 'Aluno restaurado com sucesso!');
     }
 }

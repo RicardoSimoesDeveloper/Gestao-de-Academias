@@ -11,9 +11,9 @@ const props = defineProps({
 
 const search = ref(props.filters.search || '');
 
-// Lógica de busca reativa (roda a busca 300ms após a digitação)
+// Lógica de busca reativa (usando o caminho absoluto)
 watch(search, debounce((value) => {
-    router.get(route('alunos.index'), { search: value }, {
+    router.get('/alunos', { search: value }, {
         preserveState: true,
         replace: true,
         only: ['alunos']
@@ -30,15 +30,10 @@ const statusClass = (status) => {
     }
 };
 
-// 🚨 Lógica de Soft Delete
+// Lógica de Soft Delete (Usando caminho absoluto)
 const destroy = (id) => {
     if (confirm('Tem certeza que deseja excluir (movê-lo para a lixeira) este aluno?')) {
-        router.delete(route('alunos.destroy', id), {
-            onSuccess: () => {
-                // O Inertia recarrega a página automaticamente
-                // (Opcional: Adicionar notificação aqui)
-            },
-        });
+        router.delete(`/alunos/${id}`); 
     }
 };
 </script>
@@ -50,7 +45,6 @@ const destroy = (id) => {
         <div class="bg-white shadow rounded-lg p-6">
             
             <div class="flex justify-between items-center mb-6">
-                
                 <div class="relative w-full max-w-sm">
                     <input 
                         v-model="search"
@@ -61,7 +55,7 @@ const destroy = (id) => {
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
                 
-                <Link :href="route('alunos.create')" 
+                <Link href="/alunos/create" 
                     class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center transition">
                     + Novo Aluno
                 </Link>
@@ -73,7 +67,7 @@ const destroy = (id) => {
                         <tr>
                             <th class="p-4 border-b font-semibold text-gray-600">ID</th>
                             <th class="p-4 border-b font-semibold text-gray-600">Nome</th>
-                            <th class="p-4 border-b font-semibold text-gray-600">CPF</th>
+                            <th class="p-4 border-b font-semibold text-gray-600">Email</th> <th class="p-4 border-b font-semibold text-gray-600">CPF</th>
                             <th class="p-4 border-b font-semibold text-gray-600">Status</th>
                             <th class="p-4 border-b font-semibold text-gray-600 text-right">Ações</th>
                         </tr>
@@ -82,7 +76,7 @@ const destroy = (id) => {
                         <tr v-for="aluno in alunos.data" :key="aluno.id" class="hover:bg-gray-50 border-b last:border-0">
                             <td class="p-4 text-gray-500 text-sm">#{{ aluno.id }}</td>
                             <td class="p-4 font-medium text-gray-800">{{ aluno.nome }}</td>
-                            <td class="p-4 text-gray-600">{{ aluno.cpf }}</td>
+                            <td class="p-4 text-gray-600">{{ aluno.email }}</td> <td class="p-4 text-gray-600">{{ aluno.cpf }}</td>
                             <td class="p-4">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                                     :class="statusClass(aluno.status)">
@@ -90,7 +84,7 @@ const destroy = (id) => {
                                 </span>
                             </td>
                             <td class="p-4 text-right flex justify-end gap-3">
-                                <Link :href="route('alunos.edit', aluno.id)" 
+                                <Link :href="`/alunos/${aluno.id}/edit`" 
                                     class="text-blue-600 hover:text-blue-800 font-medium text-sm">
                                     Editar
                                 </Link>
@@ -102,8 +96,7 @@ const destroy = (id) => {
                             </td>
                         </tr>
                         <tr v-if="alunos.data.length === 0">
-                            <td colspan="5" class="p-8 text-center text-gray-500">
-                                Nenhum aluno encontrado.
+                            <td colspan="6" class="p-8 text-center text-gray-500"> Nenhum aluno encontrado.
                             </td>
                         </tr>
                     </tbody>
@@ -111,7 +104,7 @@ const destroy = (id) => {
             </div>
 
             <div v-if="alunos.links.length > 3" class="mt-6 flex justify-center">
-                <div class="flex flex-wrap -mb-1">
+                 <div class="flex flex-wrap -mb-1">
                     <template v-for="(link, key) in alunos.links" :key="key">
                         <div v-if="link.url === null" class="mr-1 mb-1 px-4 py-2 text-sm leading-4 text-gray-400 border rounded" v-html="link.label" />
                         <Link v-else

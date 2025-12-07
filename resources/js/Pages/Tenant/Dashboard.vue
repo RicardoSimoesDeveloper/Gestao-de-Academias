@@ -1,11 +1,10 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
-// Assumindo que você tem um layout específico para o Tenant
 import TenantLayout from '@/Layouts/TenantLayout.vue'; 
 
 const props = defineProps({
     metrics: Object,
-    academiaNome: String,
+    academiaNome: String, // Passado do Controller
 });
 
 // Array de dados para os cartões
@@ -52,13 +51,6 @@ const cards = [
                  class="bg-white p-6 rounded-xl shadow-lg border-t-4 transition-transform duration-300 hover:shadow-xl"
                  :class="`border-${card.color.replace('bg-', '')}`">
                 
-                <div class="flex justify-between items-center">
-                    <span class="text-sm font-medium text-gray-500 uppercase">{{ card.title }}</span>
-                    <div :class="[card.color, 'p-2 rounded-full text-white']">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="card.icon === 'users' ? 'M17 20v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 8a4 4 0 100-8 4 4 0 000 8z' : card.icon === 'user-check' ? 'M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 8a4 4 0 100-8 4 4 0 000 8zM21 12l-5 5L13 14' : card.icon === 'trending-up' ? 'M16 6l4-4 4 4M2 18h20' : 'M12 2v20M20 12H4'"></path></svg>
-                    </div>
-                </div>
-
                 <p class="text-4xl font-extrabold text-gray-900 mt-4">{{ card.value }}</p>
                 <p class="text-xs text-gray-500 mt-2">{{ card.description }}</p>
             </div>
@@ -67,7 +59,7 @@ const cards = [
         <div class="mt-8">
             <h2 class="text-xl font-bold text-gray-800 mb-4">Atividade Recente</h2>
             <div class="bg-white p-6 rounded-xl shadow-lg min-h-[200px] text-gray-400 flex items-center justify-center">
-                [Área para Gráficos de Check-in e Registros - Em Desenvolvimento]
+                Área para Gráficos de Check-in e Registros - Em Desenvolvimento
             </div>
         </div>
         

@@ -7,22 +7,22 @@ use Illuminate\Support\Facades\Auth;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use App\Http\Controllers\Tenant\AuthController;
-use Inertia\Inertia;
+use App\Http\Controllers\Tenant\AlunoController; // 🚨 Importe o AlunoController
 
-// 🚨 O middleware DEVE estar aqui para inicializar o Tenant e Carregar as Rotas.
+// O grupo middleware principal inicializa o tenant
 Route::middleware([
     'web',
-    InitializeTenancyByDomain::class, // Mantido aqui
+    InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    // --- ROTAS PÚBLICAS / LOGIN ---
+    // --- ROTAS DE AUTENTICAÇÃO (PÚBLICAS) ---
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'store']);
+    // Note: Logout deve ser POST, mas o redirect após logout é GET e precisa estar aqui
     Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
-    
-    // 🚨 CORREÇÃO ESSENCIAL: A ROTA RAIZ ('/') DEVE SER PÚBLICA.
-    // Ela verifica a autenticação e redireciona, ou envia para o login.
+
+    // 🚨 ROTA RAIZ ('/') E REDIRECIONAMENTO DE ACORDO COM O STATUS DE LOGIN
     Route::get('/', function () { 
         if (Auth::check()) {
             return redirect('/dashboard');
@@ -30,18 +30,32 @@ Route::middleware([
         return redirect()->route('login'); 
     });
 
-    // --- ROTAS PROTEGIDAS ---
-    Route::middleware('auth')->group(function () {
-        
-       Route::get('/', function () {
-            return redirect('/dashboard');
-        });
+    // --- ROTAS DO SISTEMA (POR ENQUANTO, FORA DO MIDDLEWARE 'auth') ---
 
-        // 🚨 NOVO: Conecta a rota do Dashboard ao Controller
-        Route::get('/dashboard', [App\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
+    // 1. Dashboard
+    Route::get('/dashboard', [App\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
 
-        // Rotas de Alunos
-        Route::get('/alunos', [App\Http\Controllers\Tenant\AlunoController::class, 'index'])->name('alunos.index');
-        Route::post('/alunos', [App\Http\Controllers\Tenant\AlunoController::class, 'store'])->name('alunos.store');
-    });
+    // 2. CRUD de Alunos (Rotas completas)
+    // Listagem (GET /alunos)
+    Route::get('/alunos', [AlunoController::class, 'index'])->name('alunos.index');
+    
+    // 🚨 ROTA FALTANTE: Exibir o formulário de criação (GET /alunos/create)
+    Route::get('/alunos/create', [AlunoController::class, 'create'])->name('alunos.create');
+    
+    // Processar o formulário de criação (POST /alunos)
+    Route::post('/alunos', [AlunoController::class, 'store'])->name('alunos.store');
+    
+    // Exibir o formulário de edição (GET /alunos/{aluno}/edit)
+    Route::get('/alunos/{aluno}/edit', [AlunoController::class, 'edit'])->name('alunos.edit');
+    
+    // Processar o formulário de edição (PUT/PATCH /alunos/{aluno})
+    Route::put('/alunos/{aluno}', [AlunoController::class, 'update'])->name('alunos.update');
+    
+    // Excluir (DELETE /alunos/{aluno})
+    Route::delete('/alunos/{aluno}', [AlunoController::class, 'destroy'])->name('alunos.destroy');
+
+    // Opcional: Rotas protegidas (caso deseje mover o dashboard/alunos para cá depois)
+    // Route::middleware('auth')->group(function () {
+    //    // ...
+    // });
 });
