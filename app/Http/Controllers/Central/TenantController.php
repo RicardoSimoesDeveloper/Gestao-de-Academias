@@ -29,26 +29,26 @@ class TenantController extends Controller
 
     // app/Http/Controllers/Central/TenantController.php
 
-    public function index(Request $request)
+   public function index(Request $request)
     {
         $query = Tenant::with('domains');
 
+        // Se tiver busca, aplica o filtro (ID ou Nome)
         if ($request->filled('search')) {
             $search = $request->search;
             
             $query->where(function($q) use ($search) {
-                
-                // 1. Busca pelo ID (agora 'começa com' a digitação)
                 $q->where('id', 'LIKE', "{$search}%") 
-                
-                // 2. Busca pelo Nome (agora 'começa com' a digitação)
-                ->orWhere('nome', 'LIKE', "{$search}%"); 
-                // ^^^ REMOVEMOS O '%' DO INÍCIO (era "%{$search}%")
+                  ->orWhere('nome', 'LIKE', "{$search}%"); // Coluna 'nome'
             });
         }
 
+        // 3. Retorna os dados PAGINADOS
         return Inertia::render('Central/Tenants/List', [
-            'tenants' => $query->latest()->get(),
+            // 🚨 MUDANÇA AQUI: Usando paginate(10) para buscar apenas 10 itens por página
+            'tenants' => $query->latest()
+                               ->paginate(10)
+                               ->withQueryString(), // Mantém os filtros de busca na paginação
             'filters' => $request->only(['search'])
         ]);
     }

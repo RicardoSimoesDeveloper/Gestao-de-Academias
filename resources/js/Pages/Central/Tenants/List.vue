@@ -29,9 +29,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="tenant in tenants" :key="tenant.id" class="hover:bg-gray-50 border-b last:border-0">
+                    <tr v-for="tenant in tenants.data" :key="tenant.id" class="hover:bg-gray-50 border-b last:border-0">
                         <td class="p-4 text-gray-500 text-sm">#{{ tenant.id }}</td>
-                        <td class="p-4 font-medium text-gray-800">{{ tenant.name }}</td>
+                        <td class="p-4 font-medium text-gray-800">{{ tenant.name }}</td> 
                         <td class="p-4">
                             <a v-if="tenant.domains && tenant.domains.length > 0" 
                                :href="'http://' + tenant.domains[0].domain + ':8000'" 
@@ -66,10 +66,25 @@
                 </tbody>
             </table>
             
-            <div v-if="tenants.length === 0" class="p-8 text-center text-gray-500">
+            <div v-if="tenants.data.length === 0" class="p-8 text-center text-gray-500">
                 Nenhuma academia encontrada.
             </div>
         </div>
+        
+        <div v-if="tenants.links.length > 3" class="mt-4 flex justify-center">
+            <div class="flex flex-wrap -mb-1">
+                <template v-for="(link, key) in tenants.links" :key="key">
+                    <div v-if="link.url === null" class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded" v-html="link.label" />
+                    <Link v-else
+                        class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border rounded hover:bg-white focus:border-indigo-500 focus:text-indigo-500"
+                        :class="{ 'bg-blue-600 text-white border-blue-600': link.active }"
+                        :href="link.url"
+                        v-html="link.label"
+                    />
+                </template>
+            </div>
+        </div>
+        
     </CentralLayout>
 </template>
 
@@ -78,25 +93,23 @@ import CentralLayout from '@/Layouts/CentralLayout.vue';
 import { Link, router } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
 import { ref, watch } from 'vue';
-import debounce from 'lodash/debounce'; // Padrão no Laravel/Inertia
+import debounce from 'lodash/debounce';
 
-// Recebe tenants e filters (para manter o que foi digitado)
+// 🚨 MUDANÇA AQUI: Agora esperamos um Objeto (Paginator), não um Array
 const props = defineProps({
-    tenants: Array,
+    tenants: Object,
     filters: Object 
 });
 
-// Variável reativa da busca
 const search = ref(props.filters?.search || '');
 
-// Observa a digitação e atualiza a lista automaticamente
 watch(search, debounce((value) => {
     router.get('/admin/academias', { search: value }, {
-        preserveState: true, // Mantém a posição da tela
-        replace: true,       // Não suja o histórico do navegador
-        only: ['tenants']    // Otimização: carrega só os dados da tabela
+        preserveState: true,
+        replace: true,
+        only: ['tenants']
     });
-}, 300)); // Espera 300ms após parar de digitar
+}, 300)); 
 
 const confirmarExclusao = (tenant) => {
     Swal.fire({
