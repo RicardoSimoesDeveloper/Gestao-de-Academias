@@ -3,9 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Aluno extends Model
 {
+    use HasFactory, SoftDeletes;
+
+    protected $connection = 'tenant';
+
     protected $fillable = 
     [
         'nome', 
@@ -13,6 +19,11 @@ class Aluno extends Model
         'email', 
         'data_nascimento', 
         'status'
+    ];
+
+    protected $dates = 
+    [
+        'deleted_at'
     ];
     
     protected $casts = [

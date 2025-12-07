@@ -18,6 +18,7 @@ return new class extends Migration
         $table->string('email', 50)->nullable();
         $table->date('data_nascimento')->nullable();
         $table->string('status')->default('ativo');
+        $table->softDeletes();
         $table->timestamps();
     });
 }

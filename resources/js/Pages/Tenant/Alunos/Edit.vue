@@ -1,27 +1,32 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import TenantLayout from '@/Layouts/TenantLayout.vue'; 
-import { useToast } from '@/Composables/toast'; // Assumindo que você tem um sistema de toast/notificação
+import TenantLayout from '@/Layouts/TenantLayout.vue';
+// import { useToast } from '@/Composables/toast'; // Para notificações
 
+const props = defineProps({
+    aluno: Object, // Objeto Aluno que vem do controller
+    // errors: Object // Se não estiver usando form.errors
+});
+
+// Inicializa o formulário com os dados do aluno
 const form = useForm({
-    nome: '',
-    email: '',
-    cpf: '',
-    data_nascimento: '',
-    status: 'ativo',
+    _method: 'put', // 🚨 MUITO IMPORTANTE: Define o método HTTP para PUT/PATCH
+    nome: props.aluno.nome,
+    email: props.aluno.email,
+    cpf: props.aluno.cpf,
+    data_nascimento: props.aluno.data_nascimento,
+    status: props.aluno.status,
 });
 
 const submit = () => {
-    form.post(route('alunos.store'), {
+    // Rota de atualização: alunos.update
+    form.post(route('alunos.update', props.aluno.id), {
         onSuccess: () => {
-            // Limpa o formulário após o sucesso e mostra notificação
-            form.reset();
-            useToast().success('Aluno cadastrado!');
+            // useToast().success('Aluno atualizado!');
         },
         onError: (errors) => {
-            console.error(errors);
-            useToast().error('Verifique os dados do formulário.');
+            // console.error(errors);
         },
     });
 };
@@ -34,15 +39,15 @@ const statusOptions = ref([
 </script>
 
 <template>
-    <Head title="Novo Aluno" />
+    <Head :title="`Editar ${aluno.nome}`" />
 
-    <TenantLayout title="Cadastrar Novo Aluno">
+    <TenantLayout :title="`Editar Aluno: ${aluno.nome}`">
         <div class="max-w-4xl mx-auto bg-white shadow rounded-lg p-8">
             <form @submit.prevent="submit">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo <span class="text-red-500">*</span></label>
+                        <label for="nome" class="block text-sm font-medium text-gray-700">Nome Completo</label>
                         <input id="nome" v-model="form.nome" type="text" 
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                             :class="{'border-red-500': form.errors.nome}"
@@ -51,7 +56,7 @@ const statusOptions = ref([
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                         <input id="email" v-model="form.email" type="email" 
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                             :class="{'border-red-500': form.errors.email}"
@@ -76,7 +81,7 @@ const statusOptions = ref([
                     </div>
 
                     <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700">Status <span class="text-red-500">*</span></label>
+                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                         <select id="status" v-model="form.status" 
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                             :class="{'border-red-500': form.errors.status}"
@@ -95,8 +100,8 @@ const statusOptions = ref([
                         Cancelar
                     </Link>
                     <button type="submit" :disabled="form.processing"
-                        class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition disabled:opacity-50">
-                        {{ form.processing ? 'Salvando...' : 'Cadastrar Aluno' }}
+                        class="px-4 py-2 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition disabled:opacity-50">
+                        {{ form.processing ? 'Atualizando...' : 'Salvar Alterações' }}
                     </button>
                 </div>
             </form>
