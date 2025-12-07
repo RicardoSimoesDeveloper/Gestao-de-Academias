@@ -1,6 +1,7 @@
 <template>
     <CentralLayout title="Dashboard Geral">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            
             <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
                 <p class="text-sm text-gray-500 font-medium">Total de Academias</p>
                 <p class="text-3xl font-bold text-gray-800">{{ totalTenants }}</p>
@@ -8,17 +9,17 @@
             
             <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
                 <p class="text-sm text-gray-500 font-medium">Novas este mês</p>
-                <p class="text-3xl font-bold text-gray-800">2</p> </div>
+                <p class="text-3xl font-bold text-gray-800">{{ newTenantsThisMonth }}</p> 
+            </div>
 
             <div class="bg-white p-6 rounded-lg shadow border-l-4 border-purple-500">
                 <p class="text-sm text-gray-500 font-medium">Planos Ativos</p>
-                <p class="text-3xl font-bold text-gray-800">100%</p>
+                <p class="text-3xl font-bold text-gray-800">{{ activePlansPercent }}</p>
             </div>
 
             <div class="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
                 <p class="text-sm text-gray-500 font-medium">Alunos Totais</p>
-                <p class="text-3xl font-bold text-gray-800">--</p>
-                <p class="text-xs text-gray-400">Em desenvolvimento</p>
+                <p class="text-3xl font-bold text-gray-800">{{ totalAlunos }}</p>
             </div>
         </div>
 
@@ -30,11 +31,13 @@
         </div>
     </CentralLayout>
 </template>
-
 <script setup>
 import CentralLayout from '@/Layouts/CentralLayout.vue';
 
 defineProps({
-    totalTenants: Number
+    totalTenants: Number,
+    newTenantsThisMonth: Number, // Nova métrica
+    activePlansPercent: String, // Nova métrica
+    totalAlunos: Number, // Nova métrica
 });
 </script>

@@ -1,121 +1,99 @@
+<script setup>
+import CentralLayout from '@/Layouts/CentralLayout.vue';
+import { defineProps } from 'vue';
+
+const props = defineProps({
+    resumo: Object, // Contém total_tenants, total_alunos, etc.
+    detalhes: Array, // Tabela com dados por unidade
+});
+
+// Helper para formatar moeda
+const formatCurrency = (value) => {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+    }).format(value);
+};
+
+// Helper para determinar a classe de erro (banco ausente)
+const rowClass = (status_erro) => {
+    return status_erro ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-gray-50';
+};
+</script>
+
 <template>
-    <CentralLayout title="Relatórios Consolidados">
-        
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Faturamento Mensal (Est.)</p>
-                        <p class="text-2xl font-bold text-gray-800 mt-1">
-                            {{ formatarMoeda(resumo.total_faturamento) }}
-                        </p>
-                    </div>
-                    <div class="p-2 bg-green-50 rounded-lg text-green-600">
-                        <span class="text-xl">💰</span>
-                    </div>
-                </div>
+    <CentralLayout title="Relatórios e Dashboard Geral">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Dashboard de Performance</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+                <p class="text-sm text-gray-500 font-medium">Total de Academias</p>
+                <p class="text-3xl font-bold text-gray-800">{{ resumo.total_tenants }}</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
+                <p class="text-sm text-gray-500 font-medium">Total de Alunos</p>
+                <p class="text-3xl font-bold text-gray-800">{{ resumo.total_alunos }}</p>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total de Alunos</p>
-                        <p class="text-2xl font-bold text-gray-800 mt-1">{{ resumo.total_alunos }}</p>
-                    </div>
-                    <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
-                        <span class="text-xl">👥</span>
-                    </div>
-                </div>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
+                <p class="text-sm text-gray-500 font-medium">Faturamento Estimado</p>
+                <p class="text-3xl font-bold text-gray-800">{{ formatCurrency(resumo.total_faturamento) }}</p>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Unidades Ativas</p>
-                        <p class="text-2xl font-bold text-gray-800 mt-1">{{ resumo.total_tenants }}</p>
-                    </div>
-                    <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
-                        <span class="text-xl">🏢</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Ticket Médio</p>
-                        <p class="text-2xl font-bold text-gray-800 mt-1">
-                            {{ formatarMoeda(resumo.ticket_medio) }}
-                        </p>
-                    </div>
-                    <div class="p-2 bg-yellow-50 rounded-lg text-yellow-600">
-                        <span class="text-xl">🏷️</span>
-                    </div>
-                </div>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-purple-500">
+                <p class="text-sm text-gray-500 font-medium">Ticket Médio (Estimado)</p>
+                <p class="text-3xl font-bold text-gray-800">{{ formatCurrency(resumo.ticket_medio) }}</p>
             </div>
         </div>
 
-        <div class="bg-white shadow-sm rounded-xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 class="font-bold text-gray-800">Desempenho por Unidade</h3>
-                <button class="text-sm text-blue-600 hover:underline">Exportar CSV</button>
-            </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="font-bold text-gray-700 mb-4">Detalhes por Unidade</h3>
             
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="text-xs text-gray-500 uppercase bg-white border-b">
-                        <th class="px-6 py-3 font-semibold">Unidade</th>
-                        <th class="px-6 py-3 font-semibold text-center">Alunos Ativos</th>
-                        <th class="px-6 py-3 font-semibold text-right">Faturamento (Est.)</th>
-                        <th class="px-6 py-3 font-semibold text-center">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm">
-                    <tr v-for="item in detalhes" :key="item.id" class="hover:bg-gray-50 border-b last:border-0 group">
-                        <td class="px-6 py-4">
-                            <div class="font-medium text-gray-800">{{ item.nome }}</div>
-                            <div class="text-xs text-gray-400">{{ item.dominio }}</div>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-bold text-xs">
-                                {{ item.alunos }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-right font-mono text-gray-700">
-                            {{ formatarMoeda(item.faturamento) }}
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <div class="flex items-center justify-center">
-                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
-                                <span class="text-gray-600">Regular</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr v-if="detalhes.length === 0">
-                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                            Nenhuma unidade encontrada para gerar relatório.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome da Unidade</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domínio de Acesso</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total de Alunos</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Faturamento Estimado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr v-for="unidade in detalhes" :key="unidade.id" :class="rowClass(unidade.status_erro)">
+                            
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" 
+                                :class="{'text-red-700 font-bold': unidade.status_erro, 'text-gray-900': !unidade.status_erro}">
+                                {{ unidade.nome }}
+                                <span v-if="unidade.status_erro" class="ml-2 text-xs bg-red-200 text-red-800 px-2 py-0.5 rounded">ERRO DB</span>
+                            </td>
+                            
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <a :href="`http://${unidade.dominio}:8000/login`" target="_blank" class="text-blue-500 hover:text-blue-700">
+                                    {{ unidade.dominio }}
+                                </a>
+                            </td>
+                            
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold" 
+                                :class="{'text-red-700': unidade.status_erro, 'text-gray-800': !unidade.status_erro}">
+                                {{ unidade.alunos }}
+                            </td>
+
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-bold" 
+                                :class="{'text-red-700': unidade.status_erro, 'text-green-600': !unidade.status_erro}">
+                                {{ formatCurrency(unidade.faturamento) }}
+                            </td>
+                        </tr>
+                        <tr v-if="detalhes.length === 0">
+                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                Nenhuma academia cadastrada.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </CentralLayout>
 </template>
-
-<script setup>
-import CentralLayout from '@/Layouts/CentralLayout.vue';
-
-// Recebe os dados do Controller
-defineProps({
-    resumo: Object,
-    detalhes: Array
-});
-
-// Função auxiliar para formatar dinheiro (BRL)
-const formatarMoeda = (valor) => {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-    }).format(valor);
-};
-</script>
