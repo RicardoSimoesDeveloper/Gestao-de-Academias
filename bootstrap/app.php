@@ -10,9 +10,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware) {
-        // ATENÇÃO: Se tiver algo como 'InitializeTenancyByDomain' aqui dentro, APAGUE!
-        // O Tenancy não pode estar no middleware global.
+  ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append: [
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

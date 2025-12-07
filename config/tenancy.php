@@ -16,13 +16,10 @@ return [
      *
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
-   'central_domains' => [
-        '127.0.0.1',
-        '127.0.0.1:8000',
-        'localhost',
-        'localhost:8000',
-        'aplicacao.local',
-        'aplicacao.local:8000', // A variação com porta é essencial
+    'central_domains' => [
+        '127.0.0.1',            // O Stancl deve ignorar o acesso por IP
+        'localhost',            // Ignorar localhost
+        'aplicacao.local'      // aplicacao.local (domínio raiz)
     ],
 
     'middleware' => [
