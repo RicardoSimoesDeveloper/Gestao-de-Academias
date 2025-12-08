@@ -11,6 +11,7 @@ class Aluno extends Model
     use HasFactory, SoftDeletes;
 
     protected $connection = 'tenant';
+    protected $primaryKey = 'id';
 
     protected $fillable = 
     [

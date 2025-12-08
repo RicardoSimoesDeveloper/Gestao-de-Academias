@@ -59,9 +59,13 @@ class AlunoController extends Controller
 
     public function edit(Aluno $aluno)
     {
+        $aluno->data_nascimento = $aluno->data_nascimento 
+            ? $aluno->data_nascimento->format('Y-m-d') 
+            : null;
+
         return Inertia::render('Tenant/Alunos/Edit', [
-            'aluno' => $aluno, //Passando o objeto Aluno para a view
-        ]);
+        'aluno' => $aluno, 
+    ]);
     }
 
     /**
