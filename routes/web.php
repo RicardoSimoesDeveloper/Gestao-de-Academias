@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Controllers\Central\TenantController;
+use App\Http\Controllers\Central\TenantCentralController;
 use App\Http\Controllers\Central\AuthCentralController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use App\Http\Controllers\Central\ReportController;
+use App\Http\Controllers\Central\ReportCentralController;
 
 $appDomain = env('APP_DOMAIN'); 
 
@@ -31,19 +30,19 @@ Route::domain($appDomain)->group(function () {
     // --- ÁREA ADMINISTRATIVA (Protegida) ---
     Route::middleware('auth')->prefix('admin')->group(function () {
         
-        Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('central.dashboard');
+        // Dashboard Geral
+        Route::get('/dashboard', [TenantCentralController::class, 'dashboard'])->name('central.dashboard');
         
         // Academias (Lista e CRUD)
-        Route::get('/academias', [TenantController::class, 'index'])->name('tenants.index');
-        Route::get('/nova-academia', [TenantController::class, 'create'])->name('tenants.create');
-        Route::post('/nova-academia', [TenantController::class, 'store'])->name('tenants.store');
-
-        Route::get('/academias/{id}/editar', [TenantController::class, 'edit'])->name('tenants.edit');
-        Route::put('/academias/{id}', [TenantController::class, 'update'])->name('tenants.update');
-        Route::delete('/academias/{id}', [TenantController::class, 'destroy'])->name('tenants.destroy');
+        Route::get('/academias', [TenantCentralController::class, 'index'])->name('tenants.index');
+        Route::get('/nova-academia', [TenantCentralController::class, 'create'])->name('tenants.create');
+        Route::post('/nova-academia', [TenantCentralController::class, 'store'])->name('tenants.store');
+        Route::get('/academias/{id}/editar', [TenantCentralController::class, 'edit'])->name('tenants.edit');
+        Route::put('/academias/{id}', [TenantCentralController::class, 'update'])->name('tenants.update');
+        Route::delete('/academias/{id}', [TenantCentralController::class, 'destroy'])->name('tenants.destroy');
 
         // Relatórios
-        Route::get('/relatorios', [ReportController::class, 'index'])->name('central.reports');
+        Route::get('/relatorios', [ReportCentralController::class, 'index'])->name('central.reports');
     });
 
 });

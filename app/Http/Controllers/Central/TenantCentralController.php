@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Central\TenantCentralIndexRequest;
+use App\Http\Requests\Central\TenantCentralStoreRequest;
+use App\Http\Requests\Central\TenantCentralUpdateRequest;
+use Illuminate\Support\Facades\Log;
 
-class TenantController extends Controller
+class TenantCentralController extends Controller
 {
     /**
      * NOVO: Dashboard Geral (Cards e Métricas)
@@ -69,26 +71,24 @@ class TenantController extends Controller
 
     // app/Http/Controllers/Central/TenantController.php
 
-   public function index(Request $request)
+  public function index(TenantCentralIndexRequest $request) // 🚨 Injetando IndexRequest
     {
         $query = Tenant::with('domains');
 
-        // Se tiver busca, aplica o filtro (ID ou Nome)
+        // Se o campo 'search' foi validado e está presente, aplicamos o filtro.
         if ($request->filled('search')) {
             $search = $request->search;
             
             $query->where(function($q) use ($search) {
                 $q->where('id', 'LIKE', "{$search}%") 
-                  ->orWhere('nome', 'LIKE', "{$search}%"); // Coluna 'nome'
+                  ->orWhere('name', 'LIKE', "{$search}%"); 
             });
         }
 
-        // 3. Retorna os dados PAGINADOS
         return Inertia::render('Central/Tenants/List', [
-            // 🚨 MUDANÇA AQUI: Usando paginate(10) para buscar apenas 10 itens por página
             'tenants' => $query->latest()
                                ->paginate(10)
-                               ->withQueryString(), // Mantém os filtros de busca na paginação
+                               ->withQueryString(), 
             'filters' => $request->only(['search'])
         ]);
     }
@@ -104,44 +104,37 @@ class TenantController extends Controller
     /**
      * Salvar Nova Academia (Mantido com pequeno ajuste no redirect)
      */
-    public function store(Request $request)
+    public function store(TenantCentralStoreRequest $request) // 🚨 Injetando StoreRequest
     {
-        // 1. Validação
-        $request->validate([
-            'id' => ['required', 'string', 'max:255', 'unique:tenants,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'email_admin' => ['required', 'email'],
-            'senha_admin' => ['required', 'string', 'min:6'],
-        ]);
-
-        // 2. Definir o nome do domínio (Ex: sportfit.aplicacao.local)
-        $appDomain = env('APP_DOMAIN'); // Ex: aplicacao.local
-        $subdomain = $request->id;      // Ex: sportfit
-        $domain = $subdomain . '.' . $appDomain; // sportfit.aplicacao.local
+        // 1. A validação foi feita pelo Request. Usamos $request->validated() para dados limpos.
+        $data = $request->validated();
+        
+        // 2. Definir o nome do domínio
+        $appDomain = env('APP_DOMAIN');
+        $subdomain = $data['id']; 
+        $domain = $subdomain . '.' . $appDomain;
 
         // 3. Criação do Tenant (no banco central)
         $tenant = Tenant::create([
             'id' => $subdomain,
-            'name' => $request->name, // Garante que o nome seja salvo nos dados do tenant
+            'name' => $data['name'], 
         ]);
 
-        // 🚨 PASSO ESSENCIAL: Vincular o Domínio ao Tenant
-        // Isso cria o registro na tabela `domains`
+        // 4. Vincular o Domínio ao Tenant
         $tenant->domains()->create([
             'domain' => $domain,
         ]);
 
-        // 4. Configuração do Tenant (Migrations e Usuário Admin)
-        $tenant->run(function () use ($request) {
-            // Criação do usuário admin no banco de dados do Tenant
+        // 5. Configuração do Tenant (Migrations e Usuário Admin)
+        $tenant->run(function () use ($data) {
             \App\Models\User::create([
                 'name' => 'Administrador', 
-                'email' => $request->email_admin,
-                'password' => Hash::make($request->senha_admin), 
+                'email' => $data['email_admin'], 
+                'password' => Hash::make($data['senha_admin']), 
             ]);
         });
 
-        // 5. Redirecionamento
+        // 6. Redirecionamento
         return redirect()->route('tenants.index')->with('success', 'Academia criada e domínio configurado com sucesso!');
     }
 
@@ -163,16 +156,16 @@ class TenantController extends Controller
     /**
      * Atualizar Dados
      */
-    public function update(Request $request, $id)
+    public function update(TenantCentralUpdateRequest $request, $id) // 🚨 Injetando UpdateRequest
     {
+        Log::info("Iniciando atualização da academia ID: {$id}");
         $tenant = Tenant::findOrFail($id);
-        $request->validate(['nome' => 'required|string|max:255']);
+        $data = $request->validated(); // Dados limpos
 
-        $tenant->update(['name' => $request->nome]);
+        $tenant->update(['name' => $data['nome']]); 
 
-        // O SEGREDO ESTÁ AQUI NO FINAL: '303'
         return redirect()->route('tenants.index', [], 303)
-                        ->with('success', 'Academia atualizada com sucesso!');
+                         ->with('success', 'Academia atualizada com sucesso!');
     }
 
     /**
