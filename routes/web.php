@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Central\TenantController;
-use App\Http\Controllers\Central\AuthController;
+use App\Http\Controllers\Central\AuthCentralController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -24,9 +24,9 @@ Route::domain($appDomain)->group(function () {
     });
 
     // --- ROTAS DE AUTENTICAÇÃO (Públicas) ---
-    Route::get('/login', [AuthController::class, 'login'])->name('central.login');
-    Route::post('/login', [AuthController::class, 'store']);
-    Route::post('/logout', [AuthController::class, 'destroy'])->name('central.logout');
+    Route::get('/login', [AuthCentralController::class, 'login'])->name('central.login');
+    Route::post('/login', [AuthCentralController::class, 'store']);
+    Route::post('/logout', [AuthCentralController::class, 'destroy'])->name('central.logout');
 
     // --- ÁREA ADMINISTRATIVA (Protegida) ---
     Route::middleware('auth')->prefix('admin')->group(function () {

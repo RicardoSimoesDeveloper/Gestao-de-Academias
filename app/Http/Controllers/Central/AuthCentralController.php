@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Http\Requests\Central\AuthCentralRequest;
 
-class AuthController extends Controller
+class AuthCentralController extends Controller
 {
     // Tela de Login
     public function login()
@@ -16,14 +17,12 @@ class AuthController extends Controller
     }
 
     // Processar Login
-    public function store(Request $request)
+    public function store(AuthCentralRequest $request) // 🚨 Injeta AuthCentralRequest
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required', // Valida o campo 'password'
-        ]);
+        // O $request->validated() contém apenas os dados validados: email e password.
+        $credentials = $request->validated(); 
 
-        // O Laravel busca 'email' e compara 'password' automaticamente
+        // O Laravel busca 'email' e compara 'password'
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended(route('central.dashboard'));
