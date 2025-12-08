@@ -45,11 +45,11 @@ const statusOptions = ref([
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
                     <div>
-                        <label for="nome" class="block text-sm font-bold text-gray-700">
+                        <label for="nome" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nome Completo <span class="text-red-500">*</span>
                         </label>
                         <input id="nome" v-model="form.nome" type="text" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 transition"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
                             :class="{'border-red-500': form.errors.nome}"
                             placeholder="Nome e Sobrenome"
                             required>
@@ -57,42 +57,40 @@ const statusOptions = ref([
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-bold text-gray-700">
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
                             Email <span class="text-red-500">*</span>
                         </label>
                         <input id="email" v-model="form.email" type="email" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 transition"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
                             :class="{'border-red-500': form.errors.email}"
                             placeholder="exemplo@email.com"
                             required>
-                        <p class="text-xs text-gray-500 mt-1">Deve ser único na academia.</p>
                         <div v-if="form.errors.email" class="text-xs text-red-500 mt-1">{{ form.errors.email }}</div>
                     </div>
 
                     <div>
-                        <label for="cpf" class="block text-sm font-bold text-gray-700">CPF</label>
+                        <label for="cpf" class="block text-sm font-semibold text-gray-700 mb-2">CPF</label>
                         <input id="cpf" v-model="form.cpf" type="text" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 transition"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
                             :class="{'border-red-500': form.errors.cpf}"
                             placeholder="000.000.000-00">
-                        <p class="text-xs text-gray-500 mt-1">Opcional, mas se preenchido, deve ser único.</p>
                         <div v-if="form.errors.cpf" class="text-xs text-red-500 mt-1">{{ form.errors.cpf }}</div>
                     </div>
 
                     <div>
-                        <label for="data_nascimento" class="block text-sm font-bold text-gray-700">Data de Nascimento</label>
+                        <label for="data_nascimento" class="block text-sm font-semibold text-gray-700 mb-2">Data de Nascimento</label>
                         <input id="data_nascimento" v-model="form.data_nascimento" type="date" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 transition"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
                             :class="{'border-red-500': form.errors.data_nascimento}">
                         <div v-if="form.errors.data_nascimento" class="text-xs text-red-500 mt-1">{{ form.errors.data_nascimento }}</div>
                     </div>
 
                     <div>
-                        <label for="status" class="block text-sm font-bold text-gray-700">
+                        <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">
                             Status <span class="text-red-500">*</span>
                         </label>
                         <select id="status" v-model="form.status" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 transition"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
                             :class="{'border-red-500': form.errors.status}"
                             required>
                             <option v-for="option in statusOptions" :key="option.value" :value="option.value">
