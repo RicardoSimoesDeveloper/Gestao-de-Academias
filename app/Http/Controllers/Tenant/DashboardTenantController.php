@@ -27,7 +27,7 @@ class DashboardTenantController extends Controller
             ? round(($alunosInativos / $totalAlunos) * 100, 1) 
             : 0;
 
-        return Inertia::render('Tenant/Dashboard', [
+        return Inertia::render('Tenant/TenantDashboard', [
             'metrics' => [
                 'totalAlunos' => $totalAlunos,
                 'ativos' => $alunosAtivos,

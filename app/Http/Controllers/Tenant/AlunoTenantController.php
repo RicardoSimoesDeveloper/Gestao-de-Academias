@@ -29,7 +29,7 @@ class AlunoTenantController extends Controller
                         ->paginate(15) // Paginação padrão para o Tenant
                         ->withQueryString();
 
-        return Inertia::render('Tenant/Alunos/Index', [
+        return Inertia::render('Tenant/Alunos/AlunoIndex', [
             'alunos' => $alunos,
             'filters' => $filters,
         ]);
@@ -38,7 +38,7 @@ class AlunoTenantController extends Controller
     // Método para exibir o formulário de criação
     public function create()
     {
-        return Inertia::render('Tenant/Alunos/Create');
+        return Inertia::render('Tenant/Alunos/AlunoCreate');
     }
 
    public function store(AlunoStoreRequest $request) 
@@ -56,7 +56,7 @@ class AlunoTenantController extends Controller
             ? $aluno->data_nascimento->format('Y-m-d') 
             : null;
 
-        return Inertia::render('Tenant/Alunos/Edit', [
+        return Inertia::render('Tenant/Alunos/AlunoEdit', [
         'aluno' => $aluno, 
     ]);
     }

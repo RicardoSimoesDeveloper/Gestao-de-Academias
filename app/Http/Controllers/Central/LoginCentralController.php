@@ -13,7 +13,7 @@ class LoginCentralController extends Controller
     // Tela de Login
     public function login()
     {
-        return Inertia::render('Central/Auth/Login');
+        return Inertia::render('Central/Auth/CentralLogin');
     }
 
     // Processar Login

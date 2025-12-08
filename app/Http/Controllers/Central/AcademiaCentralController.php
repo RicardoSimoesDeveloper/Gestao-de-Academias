@@ -54,7 +54,7 @@ class AcademiaCentralController extends Controller
         // Por exemplo: (Tenants com status 'ativo' / Total de Tenants) * 100
         $activePlansPercent = '100%'; // Valor fixo por enquanto
 
-        return Inertia::render('Central/Index', [
+        return Inertia::render('Central/CentralDashboard', [
             'totalTenants' => $totalTenants,
             'newTenantsThisMonth' => $newTenantsThisMonth,
             'totalAlunos' => $totalAlunos,
@@ -84,7 +84,7 @@ class AcademiaCentralController extends Controller
             });
         }
 
-        return Inertia::render('Central/Tenants/List', [
+        return Inertia::render('Central/Academias/CentralList', [
             'tenants' => $query->latest()
                                ->paginate(10)
                                ->withQueryString(), 
@@ -97,7 +97,7 @@ class AcademiaCentralController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Central/Create');
+        return Inertia::render('Central/Academias/CentralCreate');
     }
 
     /**
@@ -147,7 +147,7 @@ class AcademiaCentralController extends Controller
         // O findOrFail garante que se o ID não existir, dá erro 404 antes de carregar a tela
         $tenant = Tenant::with('domains')->findOrFail($id);
 
-        return Inertia::render('Central/Tenants/Edit', [
+        return Inertia::render('Central/Academias/CentralEdit', [
             'tenant' => $tenant // <--- Estamos enviando a variável 'tenant' aqui
         ]);
     }

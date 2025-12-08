@@ -12,7 +12,7 @@ class LoginTenantController extends Controller
 {
     public function login()
     {
-        return Inertia::render('Tenant/Auth/Login', [
+        return Inertia::render('Tenant/Auth/TenantLogin', [
             'academia' => tenant('name') 
         ]);
     }

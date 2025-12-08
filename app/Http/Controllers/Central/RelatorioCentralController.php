@@ -60,7 +60,7 @@ class RelatorioCentralController extends Controller
             tenancy()->end();
         }
 
-        return Inertia::render('Central/Reports/Index', [
+        return Inertia::render('Central/Relatorios/Index', [
             'resumo' => [
                 'total_tenants' => $tenants->count(),
                 'total_alunos' => $totalAlunos,
