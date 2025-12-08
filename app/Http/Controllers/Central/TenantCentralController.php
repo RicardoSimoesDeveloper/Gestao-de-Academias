@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Central\TenantCentralIndexRequest;
 use App\Http\Requests\Central\TenantCentralStoreRequest;
 use App\Http\Requests\Central\TenantCentralUpdateRequest;
-use Illuminate\Support\Facades\Log;
 
 class TenantCentralController extends Controller
 {
@@ -158,7 +157,6 @@ class TenantCentralController extends Controller
      */
     public function update(TenantCentralUpdateRequest $request, $id) // 🚨 Injetando UpdateRequest
     {
-        Log::info("Iniciando atualização da academia ID: {$id}");
         $tenant = Tenant::findOrFail($id);
         $data = $request->validated(); // Dados limpos
 
