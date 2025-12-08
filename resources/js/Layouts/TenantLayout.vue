@@ -13,21 +13,21 @@
 
             <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
                 
-                <Link href="/dashboard" 
-                      class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors"
-                      :class="{ 'bg-blue-600 text-white': $page.url.startsWith('/dashboard') }">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                <SidebarLink href="/dashboard" activePrefix="/dashboard">
+                    <template #icon>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    </template>
                     Dashboard
-                </Link>
+                </SidebarLink>
 
-                <Link href="/alunos" 
-                      class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors"
-                      :class="{ 'bg-blue-600 text-white': $page.url.startsWith('/alunos') }">
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 8a4 4 0 100-8 4 4 0 000 8z"></path></svg>
+                <SidebarLink href="/alunos" activePrefix="/alunos">
+                    <template #icon>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 8a4 4 0 100-8 4 4 0 000 8z"></path></svg>
+                    </template>
                     Alunos
-                </Link>
-                
-                </nav>
+                </SidebarLink>
+            
+            </nav>
 
             <div class="p-4 border-t border-gray-800">
                 <button @click="logout" class="flex items-center w-full px-4 py-2 text-red-400 hover:bg-red-900/20 hover:text-red-300 rounded-lg transition-colors">
@@ -54,8 +54,10 @@
 </template>
 
 <script setup>
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+// 🚨 Importe o novo componente
+import SidebarLink from '@/Components/Layout/SidebarLink.vue'; 
 
 const page = usePage();
 
@@ -76,7 +78,6 @@ defineProps({
 });
 
 const logout = () => {
-    // 🚨 Usamos o caminho absoluto /logout (ou /login) para seguir o padrão
     router.post('/logout'); 
 };
 </script>

@@ -63,20 +63,10 @@
             </form>
         </div>
 
-        <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm transition-opacity">
-            <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm text-center transform transition-all scale-100">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
-                    <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Sucesso!</h3>
-                <p class="text-gray-500 mb-6">Os dados da academia foram atualizados corretamente.</p>
-                
-                <button @click="fecharModal" class="w-full bg-gray-900 text-white py-2.5 rounded-lg hover:bg-gray-800 font-medium transition-colors">
-                    Ok, entendi
-                </button>
-            </div>
-        </div>
+        <SuccessModal :show="showModal" @close="fecharModal">
+            <template #title>Atualização Concluída!</template>
+            <p class="text-gray-500 mb-6">Os dados da academia foram atualizados corretamente.</p>
+        </SuccessModal>
 
     </CentralLayout>
 </template>
@@ -85,6 +75,8 @@
 import CentralLayout from '@/Layouts/CentralLayout.vue';
 import { useForm, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+// 🚨 Importe o novo componente
+import SuccessModal from '@/Components/Ui/Shared/SuccessModal.vue'; 
 
 const props = defineProps({
     tenant: Object
@@ -98,14 +90,12 @@ const form = useForm({
 });
 
 const salvarCadastro = () => {
-    // URL Padrão Restaurada
-    // Usamos trim() só pra garantir limpeza
     const id = String(props.tenant.id).trim();
     const urlFinal = `/admin/academias/${id}`;
 
     form.put(urlFinal, {
         onSuccess: () => {
-            // Em vez de alert(), abrimos nosso modal bonito
+            // Ao invés de usar o alert, ativamos o modal
             showModal.value = true;
         },
         onError: (errors) => {
@@ -116,9 +106,5 @@ const salvarCadastro = () => {
 
 const fecharModal = () => {
     showModal.value = false;
-    // Opcional: Se o Controller já redirecionou, o modal pode nem aparecer por muito tempo,
-    // mas se o Inertia manter o estado, isso fecha o modal.
-    // Se quiser ir para a lista manualmente ao fechar:
-    // router.get('/admin/academias');
 };
 </script>

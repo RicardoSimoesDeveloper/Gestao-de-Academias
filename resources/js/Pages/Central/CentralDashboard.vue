@@ -2,25 +2,30 @@
     <CentralLayout title="Dashboard Geral">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             
-            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
-                <p class="text-sm text-gray-500 font-medium">Total de Academias</p>
-                <p class="text-3xl font-bold text-gray-800">{{ totalTenants }}</p>
-            </div>
+            <DashboardCard 
+                title="Total de Academias"
+                :value="totalTenants"
+                color="blue"
+            />
             
-            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
-                <p class="text-sm text-gray-500 font-medium">Novas este mês</p>
-                <p class="text-3xl font-bold text-gray-800">{{ newTenantsThisMonth }}</p> 
-            </div>
+            <DashboardCard 
+                title="Novas este mês"
+                :value="newTenantsThisMonth"
+                color="green"
+            />
 
-            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-purple-500">
-                <p class="text-sm text-gray-500 font-medium">Planos Ativos</p>
-                <p class="text-3xl font-bold text-gray-800">{{ activePlansPercent }}</p>
-            </div>
+            <DashboardCard 
+                title="Planos Ativos"
+                :value="activePlansPercent"
+                color="purple"
+            />
 
-            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
-                <p class="text-sm text-gray-500 font-medium">Alunos Totais</p>
-                <p class="text-3xl font-bold text-gray-800">{{ totalAlunos }}</p>
-            </div>
+            <DashboardCard 
+                title="Alunos Totais"
+                :value="totalAlunos"
+                color="yellow"
+            />
+            
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow">
@@ -33,11 +38,13 @@
 </template>
 <script setup>
 import CentralLayout from '@/Layouts/CentralLayout.vue';
+// 🚨 Importe o novo componente
+import DashboardCard from '@/Components/Ui/Shared/DashboardCard.vue'; 
 
 defineProps({
     totalTenants: Number,
-    newTenantsThisMonth: Number, // Nova métrica
-    activePlansPercent: String, // Nova métrica
-    totalAlunos: Number, // Nova métrica
+    newTenantsThisMonth: Number, 
+    activePlansPercent: String, 
+    totalAlunos: Number, 
 });
 </script>

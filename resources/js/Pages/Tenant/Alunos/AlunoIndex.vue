@@ -2,17 +2,19 @@
 import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import TenantLayout from '@/Layouts/TenantLayout.vue'; 
+import StatusBadge from '@/Components/Ui/Shared/StatusBadge.vue'; // 🚨 Novo import
+import Pagination from '@/Components/Ui/Shared/Pagination.vue';     // 🚨 Novo import
 import debounce from 'lodash/debounce';
 import Swal from 'sweetalert2';
-// 🚨 IMPORTAÇÃO/DECLARAÇÃO DO SWAL (SweetAlert2)
 
 const props = defineProps({
-    alunos: Object, 
+    alunos: Object, // Deve ser um objeto paginado do Laravel/Inertia
     filters: Object,
 });
 
 const search = ref(props.filters.search || '');
 
+// Lógica de busca com debounce para evitar requisições a cada tecla digitada
 watch(search, debounce((value) => {
     router.get('/alunos', { search: value }, {
         preserveState: true,
@@ -21,18 +23,8 @@ watch(search, debounce((value) => {
     });
 }, 300));
 
-const statusClass = (status) => {
-    switch (status) {
-        case 'ativo': return 'bg-green-100 text-green-800';
-        case 'inativo': return 'bg-red-100 text-red-800';
-        case 'suspenso': return 'bg-yellow-100 text-yellow-800';
-        default: return 'bg-gray-100 text-gray-800';
-    }
-};
-
-// 🚨 CORREÇÃO DA FUNÇÃO DESTROY: Recebe o objeto aluno inteiro
+// Função de exclusão que usa o SweetAlert2 para confirmação
 const destroy = (aluno) => { 
-    // 🚨 DEBUG: O ID é garantido aqui:
     const alunoId = aluno.id;
 
     if (!alunoId) {
@@ -42,7 +34,7 @@ const destroy = (aluno) => {
     }
 
     Swal.fire({
-        title: `Excluir ${aluno.nome}?`, // Melhor UX
+        title: `Excluir ${aluno.nome}?`, 
         text: "O aluno será movido para a lixeira. Esta ação pode ser desfeita.",
         icon: 'warning',
         showCancelButton: true,
@@ -52,7 +44,7 @@ const destroy = (aluno) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            // 🚨 REQUISIÇÃO CORRETA: Envia DELETE /alunos/{id}
+            // Requisição DELETE para o endpoint do recurso
             router.delete(`/alunos/${alunoId}`, {
                 preserveState: true,
                 onSuccess: () => {
@@ -110,10 +102,7 @@ const destroy = (aluno) => {
                             <td class="p-4 text-gray-600">{{ aluno.email }}</td> 
                             <td class="p-4 text-gray-600">{{ aluno.cpf }}</td>
                             <td class="p-4">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                    :class="statusClass(aluno.status)">
-                                    {{ aluno.status.charAt(0).toUpperCase() + aluno.status.slice(1) }}
-                                </span>
+                                <StatusBadge :status="aluno.status" />
                             </td>
                             <td class="p-4 text-right flex justify-end gap-3">
                                 <Link :href="`/alunos/${aluno.id}/edit`" 
@@ -136,19 +125,7 @@ const destroy = (aluno) => {
                 </table>
             </div>
 
-            <div v-if="alunos.links.length > 3" class="mt-6 flex justify-center">
-                <div class="flex flex-wrap -mb-1">
-                    <template v-for="(link, key) in alunos.links" :key="key">
-                        <div v-if="link.url === null" class="mr-1 mb-1 px-4 py-2 text-sm leading-4 text-gray-400 border rounded" v-html="link.label" />
-                        <Link v-else
-                            class="mr-1 mb-1 px-4 py-2 text-sm leading-4 border rounded hover:bg-white focus:border-indigo-500 focus:text-indigo-500 transition"
-                            :class="{ 'bg-blue-600 text-white border-blue-600': link.active }"
-                            :href="link.url"
-                            v-html="link.label"
-                        />
-                    </template>
-                </div>
-            </div>
+            <Pagination :links="alunos.links" />
         </div>
     </TenantLayout>
 </template>

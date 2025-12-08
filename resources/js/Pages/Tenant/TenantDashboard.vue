@@ -1,40 +1,38 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import TenantLayout from '@/Layouts/TenantLayout.vue'; 
+// 🚨 Importe o novo componente
+import DashboardCard from '@/Components/Ui/Shared/DashboardCard.vue'; 
 
 const props = defineProps({
     metrics: Object,
-    academiaNome: String, // Passado do Controller
+    academiaNome: String, 
 });
 
-// Array de dados para os cartões
-const cards = [
+// Reestruture o array cards para usar o componente DashboardCard
+const cardsData = [
     { 
         title: 'Total de Membros', 
         value: props.metrics.totalAlunos, 
-        icon: 'users', 
-        color: 'bg-blue-600',
+        color: 'blue',
         description: 'Total geral de cadastros ativos e inativos.'
     },
     { 
         title: 'Membros Ativos', 
         value: props.metrics.ativos, 
-        icon: 'user-check', 
-        color: 'bg-green-600',
+        color: 'green',
         description: 'Alunos com status "ativo".'
     },
     { 
         title: 'Novos no Mês', 
         value: props.metrics.novosMes, 
-        icon: 'trending-up', 
-        color: 'bg-yellow-600',
+        color: 'yellow',
         description: 'Alunos cadastrados nos últimos 30 dias.'
     },
     { 
         title: 'Rotatividade', 
         value: `${props.metrics.taxaRotatividade}%`, 
-        icon: 'rotate-cw', 
-        color: 'bg-red-600',
+        color: 'red',
         description: 'Percentual de alunos inativos.'
     },
 ];
@@ -47,13 +45,12 @@ const cards = [
         <h1 class="text-3xl font-bold text-gray-800 mb-8">Visão Geral da Unidade</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div v-for="(card, index) in cards" :key="index"
-                 class="bg-white p-6 rounded-xl shadow-lg border-t-4 transition-transform duration-300 hover:shadow-xl"
-                 :class="`border-${card.color.replace('bg-', '')}`">
-                
-                <p class="text-4xl font-extrabold text-gray-900 mt-4">{{ card.value }}</p>
-                <p class="text-xs text-gray-500 mt-2">{{ card.description }}</p>
-            </div>
+            <DashboardCard v-for="(card, index) in cardsData" :key="index"
+                           :title="card.title"
+                           :value="card.value"
+                           :color="card.color"
+                           :description="card.description"
+            />
         </div>
         
         <div class="mt-8">

@@ -1,31 +1,30 @@
 <script setup>
-import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import TenantLayout from '@/Layouts/TenantLayout.vue';
-// import { useToast } from '@/Composables/toast'; // Para notificações
+// 🚨 Importe o novo componente
+import FormInput from '@/Components/Ui/Form/FormInput.vue'; 
+import { ref } from 'vue';
 
 const form = useForm({
     nome: '',
     email: '',
     cpf: '',
     data_nascimento: '',
-    status: 'ativo', // Valor padrão
+    status: 'ativo', 
 });
 
 const submit = () => {
-    // Usando o caminho absoluto para seguir o padrão seguro
     form.post('/alunos', { 
         onSuccess: () => {
-            // useToast().success('Aluno cadastrado com sucesso!');
             form.reset(); 
         },
         onError: (errors) => {
-            // Se necessário, use useToast().error('Verifique os campos.');
             console.error('Erros de validação:', errors);
         },
     });
 };
 
+// Mantemos o selectOptions, mas em um próximo passo, poderíamos componentizar o Select
 const statusOptions = ref([
     { value: 'ativo', label: 'Ativo' },
     { value: 'inativo', label: 'Inativo' },
@@ -44,46 +43,42 @@ const statusOptions = ref([
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
-                    <div>
-                        <label for="nome" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Nome Completo <span class="text-red-500">*</span>
-                        </label>
-                        <input id="nome" v-model="form.nome" type="text" 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                            :class="{'border-red-500': form.errors.nome}"
-                            placeholder="Nome e Sobrenome"
-                            required>
-                        <div v-if="form.errors.nome" class="text-xs text-red-500 mt-1">{{ form.errors.nome }}</div>
-                    </div>
+                    <FormInput
+                        id="nome"
+                        label="Nome Completo"
+                        placeholder="Nome e Sobrenome"
+                        v-model="form.nome" 
+                        :error="form.errors.nome"
+                        type="text"
+                        required
+                    />
 
-                    <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Email <span class="text-red-500">*</span>
-                        </label>
-                        <input id="email" v-model="form.email" type="email" 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                            :class="{'border-red-500': form.errors.email}"
-                            placeholder="exemplo@email.com"
-                            required>
-                        <div v-if="form.errors.email" class="text-xs text-red-500 mt-1">{{ form.errors.email }}</div>
-                    </div>
+                    <FormInput
+                        id="email"
+                        label="Email"
+                        placeholder="exemplo@email.com"
+                        v-model="form.email" 
+                        :error="form.errors.email"
+                        type="email"
+                        required
+                    />
 
-                    <div>
-                        <label for="cpf" class="block text-sm font-semibold text-gray-700 mb-2">CPF</label>
-                        <input id="cpf" v-model="form.cpf" type="text" 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                            :class="{'border-red-500': form.errors.cpf}"
-                            placeholder="000.000.000-00">
-                        <div v-if="form.errors.cpf" class="text-xs text-red-500 mt-1">{{ form.errors.cpf }}</div>
-                    </div>
+                    <FormInput
+                        id="cpf"
+                        label="CPF"
+                        placeholder="000.000.000-00"
+                        v-model="form.cpf" 
+                        :error="form.errors.cpf"
+                        type="text"
+                    />
 
-                    <div>
-                        <label for="data_nascimento" class="block text-sm font-semibold text-gray-700 mb-2">Data de Nascimento</label>
-                        <input id="data_nascimento" v-model="form.data_nascimento" type="date" 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all"
-                            :class="{'border-red-500': form.errors.data_nascimento}">
-                        <div v-if="form.errors.data_nascimento" class="text-xs text-red-500 mt-1">{{ form.errors.data_nascimento }}</div>
-                    </div>
+                    <FormInput
+                        id="data_nascimento"
+                        label="Data de Nascimento"
+                        v-model="form.data_nascimento" 
+                        :error="form.errors.data_nascimento"
+                        type="date"
+                    />
 
                     <div>
                         <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">
