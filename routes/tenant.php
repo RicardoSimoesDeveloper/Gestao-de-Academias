@@ -6,8 +6,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; 
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use App\Http\Controllers\Tenant\AuthController;
+use App\Http\Controllers\Tenant\AuthTenantController;
 use App\Http\Controllers\Tenant\AlunoController; // 🚨 Importe o AlunoController
+use App\Http\Controllers\Tenant\DashboardAlunoController;
 
 // O grupo middleware principal inicializa o tenant
 Route::middleware([
@@ -17,10 +18,9 @@ Route::middleware([
 ])->group(function () {
 
     // --- ROTAS DE AUTENTICAÇÃO (PÚBLICAS) ---
-    Route::get('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/login', [AuthController::class, 'store']);
-    // Note: Logout deve ser POST, mas o redirect após logout é GET e precisa estar aqui
-    Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
+    Route::get('/login', [AuthTenantController::class, 'login'])->name('login');
+    Route::post('/login', [AuthTenantController::class, 'store']);
+    Route::post('/logout', [AuthTenantController::class, 'destroy'])->name('logout');
 
     // 🚨 ROTA RAIZ ('/') E REDIRECIONAMENTO DE ACORDO COM O STATUS DE LOGIN
     Route::get('/', function () { 
@@ -33,7 +33,7 @@ Route::middleware([
     // --- ROTAS DO SISTEMA (POR ENQUANTO, FORA DO MIDDLEWARE 'auth') ---
 
     // 1. Dashboard
-    Route::get('/dashboard', [App\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardAlunoController::class, 'index'])->name('dashboard');
 
     // 2. CRUD de Alunos (Rotas completas)
     // Listagem (GET /alunos)

@@ -7,7 +7,7 @@ use App\Models\Aluno; // Usaremos o Model de Aluno que já existe
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class DashboardController extends Controller
+class DashboardAlunoController extends Controller
 {
     /**
      * Coleta e exibe as métricas do Dashboard do Tenant.

@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Http\Requests\Tenant\AuthTenantRequest;
 
-class AuthController extends Controller
+class AuthTenantController extends Controller
 {
     public function login()
     {
@@ -16,16 +17,15 @@ class AuthController extends Controller
         ]);
     }
 
-public function store(Request $request)
+    public function store(AuthTenantRequest $request) // 🚨 Injeta AuthTenantRequest
     {
-        // 1. Validação dos dados
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        // 🚨 Validação e limpeza dos dados feita pelo Request.
+        // Pegamos o remember (que é booleano se prepareForValidation for usado).
+        $credentials = $request->except('remember');
+        $remember = $request->boolean('remember'); 
 
         // 2. Tenta autenticar o usuário no banco de dados do Tenant
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::attempt($credentials, $remember)) {
             
             // Regenera a sessão para prevenir ataques de fixação de sessão
             $request->session()->regenerate();
