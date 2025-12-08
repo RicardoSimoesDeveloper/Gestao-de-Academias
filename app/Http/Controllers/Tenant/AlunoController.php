@@ -58,9 +58,8 @@ class AlunoController extends Controller
 
     public function edit(Aluno $aluno)
     {
-        // O Laravel injeta o objeto Aluno automaticamente
         return Inertia::render('Tenant/Alunos/Edit', [
-            'aluno' => $aluno,
+            'aluno' => $aluno, // 🚨 Passando o objeto Aluno para a view
         ]);
     }
 
@@ -86,12 +85,19 @@ class AlunoController extends Controller
     /**
      * Exclui (Soft Delete) o aluno.
      */
-    public function destroy(Aluno $aluno)
+  public function destroy(Aluno $aluno)
     {
-        // O método delete() do Eloquent com SoftDeletes apenas preenche a coluna deleted_at.
-        $aluno->delete();
+        try {
+            // Isso executa o soft delete (popula a coluna deleted_at)
+            $aluno->delete(); 
+            
+            // Retorna o usuário para a lista de alunos
+           return redirect('/alunos')->with('success', 'Aluno excluído com sucesso!');
 
-       return redirect('/alunos')->with('success', 'Aluno excluido com sucesso!');
+        } catch (\Exception $e) {
+            // Se houver algum erro, como chave estrangeira, você pode retornar um erro
+            return redirect()->back()->with('error', 'Não foi possível excluir o aluno. Erro: ' . $e->getMessage());
+        }
     }
     
     /**

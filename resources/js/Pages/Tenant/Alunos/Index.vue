@@ -3,6 +3,8 @@ import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import TenantLayout from '@/Layouts/TenantLayout.vue'; 
 import debounce from 'lodash/debounce';
+import Swal from 'sweetalert2';
+// 🚨 IMPORTAÇÃO/DECLARAÇÃO DO SWAL (SweetAlert2)
 
 const props = defineProps({
     alunos: Object, 
@@ -11,16 +13,14 @@ const props = defineProps({
 
 const search = ref(props.filters.search || '');
 
-// Lógica de busca reativa (usando o caminho absoluto)
 watch(search, debounce((value) => {
     router.get('/alunos', { search: value }, {
         preserveState: true,
-        replace: true,
-        only: ['alunos']
+        replace: true, 
+        only: ['alunos'] 
     });
 }, 300));
 
-// Função que define a cor do status
 const statusClass = (status) => {
     switch (status) {
         case 'ativo': return 'bg-green-100 text-green-800';
@@ -30,11 +30,41 @@ const statusClass = (status) => {
     }
 };
 
-// Lógica de Soft Delete (Usando caminho absoluto)
-const destroy = (id) => {
-    if (confirm('Tem certeza que deseja excluir (movê-lo para a lixeira) este aluno?')) {
-        router.delete(`/alunos/${id}`); 
+// 🚨 CORREÇÃO DA FUNÇÃO DESTROY: Recebe o objeto aluno inteiro
+const destroy = (aluno) => { 
+    // 🚨 DEBUG: O ID é garantido aqui:
+    const alunoId = aluno.id;
+
+    if (!alunoId) {
+        console.error("Erro fatal: ID do aluno está ausente.");
+        Swal.fire('Erro!', 'Não foi possível identificar o aluno para exclusão.', 'error');
+        return; 
     }
+
+    Swal.fire({
+        title: `Excluir ${aluno.nome}?`, // Melhor UX
+        text: "O aluno será movido para a lixeira. Esta ação pode ser desfeita.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, Excluir!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 🚨 REQUISIÇÃO CORRETA: Envia DELETE /alunos/{id}
+            router.delete(`/alunos/${alunoId}`, {
+                preserveState: true,
+                onSuccess: () => {
+                    Swal.fire('Excluído!', 'O aluno foi movido para a lixeira.', 'success');
+                },
+                onError: (errors) => {
+                     console.error(errors);
+                     Swal.fire('Falha!', 'Houve um erro ao tentar excluir o aluno.', 'error');
+                }
+            });
+        }
+    });
 };
 </script>
 
@@ -67,7 +97,8 @@ const destroy = (id) => {
                         <tr>
                             <th class="p-4 border-b font-semibold text-gray-600">ID</th>
                             <th class="p-4 border-b font-semibold text-gray-600">Nome</th>
-                            <th class="p-4 border-b font-semibold text-gray-600">Email</th> <th class="p-4 border-b font-semibold text-gray-600">CPF</th>
+                            <th class="p-4 border-b font-semibold text-gray-600">Email</th> 
+                            <th class="p-4 border-b font-semibold text-gray-600">CPF</th>
                             <th class="p-4 border-b font-semibold text-gray-600">Status</th>
                             <th class="p-4 border-b font-semibold text-gray-600 text-right">Ações</th>
                         </tr>
@@ -76,7 +107,8 @@ const destroy = (id) => {
                         <tr v-for="aluno in alunos.data" :key="aluno.id" class="hover:bg-gray-50 border-b last:border-0">
                             <td class="p-4 text-gray-500 text-sm">#{{ aluno.id }}</td>
                             <td class="p-4 font-medium text-gray-800">{{ aluno.nome }}</td>
-                            <td class="p-4 text-gray-600">{{ aluno.email }}</td> <td class="p-4 text-gray-600">{{ aluno.cpf }}</td>
+                            <td class="p-4 text-gray-600">{{ aluno.email }}</td> 
+                            <td class="p-4 text-gray-600">{{ aluno.cpf }}</td>
                             <td class="p-4">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                                     :class="statusClass(aluno.status)">
@@ -89,14 +121,15 @@ const destroy = (id) => {
                                     Editar
                                 </Link>
                                 
-                                <button @click="destroy(aluno.id)" 
+                                <button @click="destroy(aluno)" 
                                     class="text-red-500 hover:text-red-700 font-medium text-sm">
                                     Excluir
                                 </button>
                             </td>
                         </tr>
                         <tr v-if="alunos.data.length === 0">
-                            <td colspan="6" class="p-8 text-center text-gray-500"> Nenhum aluno encontrado.
+                            <td colspan="6" class="p-8 text-center text-gray-500"> 
+                                Nenhum aluno encontrado.
                             </td>
                         </tr>
                     </tbody>
@@ -104,7 +137,7 @@ const destroy = (id) => {
             </div>
 
             <div v-if="alunos.links.length > 3" class="mt-6 flex justify-center">
-                 <div class="flex flex-wrap -mb-1">
+                <div class="flex flex-wrap -mb-1">
                     <template v-for="(link, key) in alunos.links" :key="key">
                         <div v-if="link.url === null" class="mr-1 mb-1 px-4 py-2 text-sm leading-4 text-gray-400 border rounded" v-html="link.label" />
                         <Link v-else
