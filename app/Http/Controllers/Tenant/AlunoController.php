@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Aluno;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Requests\Tenant\AlunoStoreRequest;
+use App\Http\Requests\Tenant\AlunoUpdateRequest;
 
 class AlunoController extends Controller
 {
@@ -39,22 +41,13 @@ class AlunoController extends Controller
         return Inertia::render('Tenant/Alunos/Create');
     }
 
-   public function store(Request $request)
+   public function store(AlunoStoreRequest $request) 
     {
-        $data = $request->validate([
-            'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:alunos,email'], // Garante email único na tabela 'alunos'
-            'cpf' => ['nullable', 'string', 'max:14', 'unique:alunos,cpf'],
-            'data_nascimento' => ['nullable', 'date'],
-            'status' => ['required', 'string', 'in:ativo,inativo,suspenso'],
-        ]);
+        $data = $request->validated(); 
 
-        // Cria o aluno no banco de dados do Tenant
         Aluno::create($data);
 
-        // Redireciona de volta para a listagem com uma mensagem de sucesso
-        // return redirect('/alunos')->with('success', 'Aluno cadastrado com sucesso!');
-         return redirect()->route('alunos.index')->with('success', 'Aluno cadastrado com sucesso');
+        return redirect()->route('alunos.index')->with('success', 'Aluno cadastrado com sucesso');
     }
 
     public function edit(Aluno $aluno)
@@ -71,20 +64,15 @@ class AlunoController extends Controller
     /**
      * Atualiza os dados do aluno.
      */
-    public function update(Request $request, Aluno $aluno)
+   public function update(AlunoUpdateRequest $request, Aluno $aluno) 
     {
-        $data = $request->validate([
-            'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:alunos,email,' . $aluno->id], 
-            'cpf' => ['nullable', 'string', 'max:14', 'unique:alunos,cpf,' . $aluno->id],
-            'data_nascimento' => ['nullable', 'date'],
-            'status' => ['required', 'string', 'in:ativo,inativo,suspenso'],
-        ]);
+        // Validação e exclusão de unicidade feita pelo Request.
+        $data = $request->validated(); 
 
         $aluno->update($data);
 
         return redirect()->route('alunos.index', [], 303)
-                        ->with('success', 'Aluno atualizado com sucesso!');
+                         ->with('success', 'Aluno atualizado com sucesso!');
     }
 
     public function destroy($id)
