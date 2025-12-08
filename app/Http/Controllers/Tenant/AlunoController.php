@@ -53,13 +53,14 @@ class AlunoController extends Controller
         Aluno::create($data);
 
         // Redireciona de volta para a listagem com uma mensagem de sucesso
-        return redirect('/alunos')->with('success', 'Aluno cadastrado com sucesso!');
+        // return redirect('/alunos')->with('success', 'Aluno cadastrado com sucesso!');
+         return redirect()->route('alunos.index')->with('success', 'Aluno cadastrado com sucesso');
     }
 
     public function edit(Aluno $aluno)
     {
         return Inertia::render('Tenant/Alunos/Edit', [
-            'aluno' => $aluno, // 🚨 Passando o objeto Aluno para a view
+            'aluno' => $aluno, //Passando o objeto Aluno para a view
         ]);
     }
 
@@ -70,7 +71,6 @@ class AlunoController extends Controller
     {
         $data = $request->validate([
             'nome' => ['required', 'string', 'max:255'],
-            // Exclui o próprio aluno da checagem de unicidade
             'email' => ['required', 'email', 'max:255', 'unique:alunos,email,' . $aluno->id], 
             'cpf' => ['nullable', 'string', 'max:14', 'unique:alunos,cpf,' . $aluno->id],
             'data_nascimento' => ['nullable', 'date'],
@@ -79,25 +79,18 @@ class AlunoController extends Controller
 
         $aluno->update($data);
 
-        return redirect('/alunos')->with('success', 'Aluno atualizado com sucesso!');
+        return redirect()->route('alunos.index', [], 303)
+                        ->with('success', 'Aluno atualizado com sucesso!');
     }
 
-    /**
-     * Exclui (Soft Delete) o aluno.
-     */
-  public function destroy(Aluno $aluno)
+    public function destroy($id)
     {
-        try {
-            // Isso executa o soft delete (popula a coluna deleted_at)
-            $aluno->delete(); 
-            
-            // Retorna o usuário para a lista de alunos
-           return redirect('/alunos')->with('success', 'Aluno excluído com sucesso!');
+        $aluno = Aluno::findOrFail($id);
 
-        } catch (\Exception $e) {
-            // Se houver algum erro, como chave estrangeira, você pode retornar um erro
-            return redirect()->back()->with('error', 'Não foi possível excluir o aluno. Erro: ' . $e->getMessage());
-        }
+        $aluno->delete(); 
+        
+        return redirect()->route('alunos.index', [], 303)
+                        ->with('success', 'Aluno excluído com sucesso!');
     }
     
     /**
@@ -110,6 +103,7 @@ class AlunoController extends Controller
         $aluno = Aluno::withTrashed()->findOrFail($id);
         $aluno->restore();
 
-       return redirect('/alunos')->with('success', 'Aluno restaurado com sucesso!');
+        return redirect()->route('alunos.index', [], 303)
+            ->with('success', 'Aluno restaurado com sucesso!');
     }
 }
