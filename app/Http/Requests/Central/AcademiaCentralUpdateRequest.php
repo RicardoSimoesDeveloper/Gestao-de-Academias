@@ -5,7 +5,7 @@ namespace App\Http\Requests\Central;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class TenantCentralUpdateRequest extends FormRequest
+class AcademiaCentralUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {

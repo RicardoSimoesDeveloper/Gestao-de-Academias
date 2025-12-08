@@ -5,7 +5,7 @@ namespace App\Http\Requests\Central;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class TenantCentralIndexRequest extends FormRequest
+class AcademiaCentralIndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Http\Requests\Central\AuthCentralRequest;
+use App\Http\Requests\Central\LoginCentralRequest;
 
-class AuthCentralController extends Controller
+class LoginCentralController extends Controller
 {
     // Tela de Login
     public function login()
@@ -17,7 +17,7 @@ class AuthCentralController extends Controller
     }
 
     // Processar Login
-    public function store(AuthCentralRequest $request) // 🚨 Injeta AuthCentralRequest
+    public function store(LoginCentralRequest $request) // 🚨 Injeta AuthCentralRequest
     {
         // O $request->validated() contém apenas os dados validados: email e password.
         $credentials = $request->validated(); 

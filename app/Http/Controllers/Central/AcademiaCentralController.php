@@ -7,11 +7,11 @@ use App\Models\Tenant;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\Central\TenantCentralIndexRequest;
-use App\Http\Requests\Central\TenantCentralStoreRequest;
-use App\Http\Requests\Central\TenantCentralUpdateRequest;
+use App\Http\Requests\Central\AcademiaCentralIndexRequest;
+use App\Http\Requests\Central\AcademiaCentralStoreRequest;
+use App\Http\Requests\Central\AcademiaCentralUpdateRequest;
 
-class TenantCentralController extends Controller
+class AcademiaCentralController extends Controller
 {
     /**
      * NOVO: Dashboard Geral (Cards e Métricas)
@@ -70,7 +70,7 @@ class TenantCentralController extends Controller
 
     // app/Http/Controllers/Central/TenantController.php
 
-  public function index(TenantCentralIndexRequest $request) // 🚨 Injetando IndexRequest
+  public function index(AcademiaCentralIndexRequest $request) // 🚨 Injetando IndexRequest
     {
         $query = Tenant::with('domains');
 
@@ -103,7 +103,7 @@ class TenantCentralController extends Controller
     /**
      * Salvar Nova Academia (Mantido com pequeno ajuste no redirect)
      */
-    public function store(TenantCentralStoreRequest $request) // 🚨 Injetando StoreRequest
+    public function store(AcademiaCentralStoreRequest $request) // 🚨 Injetando StoreRequest
     {
         // 1. A validação foi feita pelo Request. Usamos $request->validated() para dados limpos.
         $data = $request->validated();
@@ -155,7 +155,7 @@ class TenantCentralController extends Controller
     /**
      * Atualizar Dados
      */
-    public function update(TenantCentralUpdateRequest $request, $id) // 🚨 Injetando UpdateRequest
+    public function update(AcademiaCentralUpdateRequest $request, $id) // 🚨 Injetando UpdateRequest
     {
         $tenant = Tenant::findOrFail($id);
         $data = $request->validated(); // Dados limpos

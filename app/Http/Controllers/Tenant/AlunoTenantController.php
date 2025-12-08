@@ -9,7 +9,7 @@ use Inertia\Inertia;
 use App\Http\Requests\Tenant\AlunoStoreRequest;
 use App\Http\Requests\Tenant\AlunoUpdateRequest;
 
-class AlunoController extends Controller
+class AlunoTenantController extends Controller
 {
   public function index(Request $request)
     {

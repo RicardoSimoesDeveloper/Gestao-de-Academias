@@ -4,7 +4,7 @@ namespace App\Http\Requests\Central; // 🚨 Namespace ajustado para Central
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AuthCentralRequest extends FormRequest // 🚨 Nome da Classe alterado
+class LoginCentralRequest extends FormRequest // 🚨 Nome da Classe alterado
 {
     /**
      * Determine if the user is authorized to make this request.

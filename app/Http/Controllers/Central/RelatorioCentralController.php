@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use Inertia\Inertia;
 
-class ReportCentralController extends Controller
+class RelatorioCentralController extends Controller
 {
    public function index()
     {

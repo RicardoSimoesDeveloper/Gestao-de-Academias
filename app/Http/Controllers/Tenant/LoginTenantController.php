@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Http\Requests\Tenant\AuthTenantRequest;
+use App\Http\Requests\Tenant\LoginTenantRequest;
 
-class AuthTenantController extends Controller
+class LoginTenantController extends Controller
 {
     public function login()
     {
@@ -17,7 +17,7 @@ class AuthTenantController extends Controller
         ]);
     }
 
-    public function store(AuthTenantRequest $request) // 🚨 Injeta AuthTenantRequest
+    public function store(LoginTenantRequest $request) // 🚨 Injeta AuthTenantRequest
     {
         // 🚨 Validação e limpeza dos dados feita pelo Request.
         // Pegamos o remember (que é booleano se prepareForValidation for usado).
