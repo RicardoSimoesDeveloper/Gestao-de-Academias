@@ -29,7 +29,7 @@ class AlunoTenantController extends Controller
 
         $alunos = $query
             ->latest()
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         return Inertia::render('Tenant/Alunos/AlunoIndex', [
