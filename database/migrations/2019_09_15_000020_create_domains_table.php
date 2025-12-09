@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
+use Database\Seeders\TenantSeeder;
 
 class CreateDomainsTable extends Migration
 {
@@ -23,6 +25,11 @@ class CreateDomainsTable extends Migration
             $table->timestamps();
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
         });
+
+        // Artisan::call('db:seed', [
+        //     '--class' => TenantSeeder::class,
+        // ]);
+
     }
 
     /**

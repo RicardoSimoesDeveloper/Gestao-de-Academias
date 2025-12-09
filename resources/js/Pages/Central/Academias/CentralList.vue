@@ -31,7 +31,7 @@
                 <tbody>
                     <tr v-for="tenant in tenants.data" :key="tenant.id" class="hover:bg-gray-50 border-b last:border-0">
                         <td class="p-4 text-gray-500 text-sm">#{{ tenant.id }}</td>
-                        <td class="p-4 font-medium text-gray-800">{{ tenant.name }}</td> 
+                        <td class="p-4 font-medium text-gray-800">{{ tenant.nome }}</td> 
                         <td class="p-4">
                             <a v-if="tenant.domains && tenant.domains.length > 0" 
                                :href="'http://' + tenant.domains[0].domain + ':8000'" 
@@ -114,7 +114,7 @@ watch(search, debounce((value) => {
 const confirmarExclusao = (tenant) => {
     Swal.fire({
         title: 'Tem certeza?',
-        text: `Você está prestes a excluir a academia "${tenant.name}" e apagar TODO o banco de dados dela.`,
+        text: `Você está prestes a excluir a academia "${tenant.nome}" e apagar TODO o banco de dados dela.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',

@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+
 class CreateTenantsTable extends Migration
 {
     /**
@@ -25,6 +26,8 @@ class CreateTenantsTable extends Migration
             $table->json('data')->nullable();
             $table->timestamps();
         });
+
+      
     }
 
     /**
