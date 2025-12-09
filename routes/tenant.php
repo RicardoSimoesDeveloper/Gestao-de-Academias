@@ -18,7 +18,6 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    // --- ROTAS DE AUTENTICAÇÃO (PÚBLICAS) ---
     Route::get('/login', [LoginTenantController::class, 'login'])->name('login');
     Route::post('/login', [LoginTenantController::class, 'store']);
     Route::post('/logout', [LoginTenantController::class, 'destroy'])->name('logout');
@@ -32,8 +31,10 @@ Route::middleware([
     });
 
     Route::middleware('auth')->group(function () {
+         // --- ROTAS PARA DASHBOARD ---
         Route::get('/dashboard', [DashboardTenantController::class, 'index'])->name('dashboard');
 
+         // --- ROTAS DE ALUNOS ---
         Route::get('/alunos', [AlunoTenantController::class, 'index'])->name('alunos.index');
         Route::get('/alunos/create', [AlunoTenantController::class, 'create'])->name('alunos.create');
         Route::post('/alunos', [AlunoTenantController::class, 'store'])->name('alunos.store');
