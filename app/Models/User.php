@@ -10,15 +10,16 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->connection = tenant() ? 'tenant' : 'mysql';
+    }
+
     protected $fillable = [
         'name',
         'email',
         'password', 
-    ];
-
-    protected $hidden = [
-        'password',
-        'remember_token',
     ];
 
     protected function casts(): array

@@ -66,11 +66,10 @@ defineProps({
 const formulario = useForm({
     email: '',
     password: '', 
-    remember: false, 
 });
 
 const enviarFormulario = () => {
-    formulario.post(route('login'), { 
+    formulario.post('/login', {
         onFinish: () => formulario.reset('password'),
         onError: (errors) => {
             console.error('Falha na submissão:', errors);

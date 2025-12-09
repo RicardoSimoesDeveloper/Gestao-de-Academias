@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Http\Requests\Tenant\LoginTenantRequest;
+use Illuminate\Support\Facades\Log;
 
 class LoginTenantController extends Controller
 {
@@ -17,24 +18,23 @@ class LoginTenantController extends Controller
         ]);
     }
 
-    public function store(LoginTenantRequest $request) // 🚨 Injeta AuthTenantRequest
+   public function store(LoginTenantRequest $request)
     {
-        // 🚨 Validação e limpeza dos dados feita pelo Request.
-        // Pegamos o remember (que é booleano se prepareForValidation for usado).
+        Log::info('Tentando login', [
+            'credentials' => $request->only('email'),
+            'tenant' => tenant('id'),
+        ]);
+
         $credentials = $request->except('remember');
-        $remember = $request->boolean('remember'); 
+        $remember = $request->boolean('remember');
 
-        // 2. Tenta autenticar o usuário no banco de dados do Tenant
         if (Auth::attempt($credentials, $remember)) {
-            
-            // Regenera a sessão para prevenir ataques de fixação de sessão
             $request->session()->regenerate();
-
-            // 3. Redireciona para o Dashboard
             return redirect()->intended(route('dashboard'));
         }
 
-        // 4. Falha na autenticação: Retorna com erro
+        Log::info('Falha Auth::attempt');
+        
         return back()->withErrors([
             'email' => 'As credenciais fornecidas não correspondem aos nossos registros.',
         ])->onlyInput('email');
