@@ -13,63 +13,6 @@ use Inertia\Inertia;
 
 class AcademiaCentralController extends Controller
 {
-    /**
-     * NOVO: Dashboard Geral (Cards e Métricas)
-     */
-    public function dashboard()
-    {
-        // 1. Métrica: Total de Academias
-        $totalTenants = Tenant::count();
-
-        // 2. Métrica: Novas este mês
-        $newTenantsThisMonth = Tenant::where('created_at', '>=', now()->startOfMonth())->count();
-
-        // 3. Métrica: Total de Alunos (Agregação Multi-Tenant)
-        $totalAlunos = 0;
-
-        // Iteramos sobre todos os Tenants para calcular o total de alunos
-        $tenants = Tenant::all();
-
-        foreach ($tenants as $tenant) {
-            // Tenta inicializar o ambiente do tenant
-            try {
-                tenancy()->initialize($tenant);
-
-                // Agrega a contagem de alunos do banco do tenant
-                // Assumindo que a tabela é 'alunos' no Tenant DB
-                $totalAlunos += DB::table('alunos')->count();
-
-            } catch (\Stancl\Tenancy\Exceptions\TenantDatabaseDoesNotExistException $e) {
-                // Captura o erro, ignora este tenant e continua (sem quebrar a página)
-            } catch (\Exception $e) {
-                // Captura qualquer outro erro de DB (ex: tabela 'alunos' não existe)
-            } finally {
-                // Sai do contexto do tenant para garantir que as próximas chamadas voltem para o DB Central
-                tenancy()->end();
-            }
-        }
-
-        // 4. Métrica: Planos Ativos (Placeholder dinâmico)
-        // Para um cálculo real, você precisaria da lógica de planos/assinaturas.
-        // Por exemplo: (Tenants com status 'ativo' / Total de Tenants) * 100
-        $activePlansPercent = '100%'; // Valor fixo por enquanto
-
-        return Inertia::render('Central/CentralDashboard', [
-            'totalTenants' => $totalTenants,
-            'newTenantsThisMonth' => $newTenantsThisMonth,
-            'totalAlunos' => $totalAlunos,
-            'activePlansPercent' => $activePlansPercent,
-        ]);
-    }
-
-    /**
-     * AJUSTADO: Lista de Academias (Tabela)
-     * Agora aponta para a pasta 'Tenants/List' que criamos
-     */
-    // app/Http/Controllers/Central/TenantController.php
-
-    // app/Http/Controllers/Central/TenantController.php
-
     public function index(AcademiaCentralIndexRequest $request) // 🚨 Injetando IndexRequest
     {
         $query = Tenant::with('domains');

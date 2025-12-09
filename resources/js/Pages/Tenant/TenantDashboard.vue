@@ -1,15 +1,13 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
-import TenantLayout from '@/Layouts/TenantLayout.vue'; 
-// 🚨 Importe o novo componente
-import DashboardCard from '@/Components/Ui/Shared/DashboardCard.vue'; 
+import TenantLayout from '@/Layouts/TenantLayout.vue';
+import DashboardCard from '@/Components/Ui/Shared/DashboardCard.vue';
 
 const props = defineProps({
     metrics: Object,
-    academiaNome: String, 
+    academiaNome: String,
 });
 
-// Reestruture o array cards para usar o componente DashboardCard
 const cardsData = [
     { 
         title: 'Total de Membros', 
@@ -41,8 +39,10 @@ const cardsData = [
 <template>
     <Head title="Dashboard" />
 
-    <TenantLayout :title="`Dashboard da ${academiaNome}`">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">Visão Geral da Unidade</h1>
+    <TenantLayout :title="`Dashboard da ${props.academiaNome ?? 'Unidade'}`">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">
+            Visão Geral da {{ props.academiaNome ?? 'Unidade' }}
+        </h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <DashboardCard v-for="(card, index) in cardsData" :key="index"
@@ -52,13 +52,13 @@ const cardsData = [
                            :description="card.description"
             />
         </div>
-        
+
         <div class="mt-8">
             <h2 class="text-xl font-bold text-gray-800 mb-4">Atividade Recente</h2>
             <div class="bg-white p-6 rounded-xl shadow-lg min-h-[200px] text-gray-400 flex items-center justify-center">
                 Área para Gráficos de Check-in e Registros - Em Desenvolvimento
             </div>
         </div>
-        
+
     </TenantLayout>
 </template>

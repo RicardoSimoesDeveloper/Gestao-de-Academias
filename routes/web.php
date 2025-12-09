@@ -5,6 +5,7 @@ use App\Http\Controllers\Central\LoginCentralController;
 use App\Http\Controllers\Central\RelatorioCentralController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Central\CentralDashboardController;
 
 $appDomain = env('APP_DOMAIN');
 
@@ -32,7 +33,7 @@ Route::domain($appDomain)->group(function () {
     Route::middleware('auth')->prefix('admin')->group(function () {
 
         // Dashboard Geral
-        Route::get('/dashboard', [AcademiaCentralController::class, 'dashboard'])->name('central.dashboard');
+        Route::get('/dashboard', [CentralDashboardController::class, 'index'])->name('central.dashboard');
 
         // Academias (Lista e CRUD)
         Route::get('/academias', [AcademiaCentralController::class, 'index'])->name('tenants.index');
