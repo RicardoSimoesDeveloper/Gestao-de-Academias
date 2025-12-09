@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; 
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use App\Http\Controllers\Tenant\LoginTenantController;
 use App\Http\Controllers\Tenant\AlunoTenantController;
 use App\Http\Controllers\Tenant\DashboardTenantController;
+use App\Http\Controllers\Tenant\LoginTenantController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 // O grupo middleware principal inicializa o tenant
 Route::middleware([
@@ -22,13 +22,14 @@ Route::middleware([
     Route::post('/login', [LoginTenantController::class, 'store']);
     Route::post('/logout', [LoginTenantController::class, 'destroy'])->name('logout');
 
-    Route::get('/', function () { 
+    Route::get('/', function () {
         if (Auth::check()) {
             return redirect('/dashboard');
         }
-        return redirect()->route('login'); 
+
+        return redirect()->route('login');
     });
-  
+
     // Opcional: Rotas protegidas (caso deseje mover o dashboard/alunos para cá depois)
     Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardTenantController::class, 'index'])->name('dashboard');

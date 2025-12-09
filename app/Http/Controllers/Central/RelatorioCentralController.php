@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class RelatorioCentralController extends Controller
 {
-   public function index()
+    public function index()
     {
         $tenants = Tenant::with('domains')->get();
 
@@ -17,7 +17,7 @@ class RelatorioCentralController extends Controller
         $dadosPorUnidade = [];
 
         foreach ($tenants as $tenant) {
-            
+
             // BLINDAGEM: Tenta conectar. Se o banco não existir, captura o erro.
             try {
                 tenancy()->initialize($tenant);
@@ -25,12 +25,13 @@ class RelatorioCentralController extends Controller
                 // Se der erro, adiciona na lista como "Erro" e pula para o próximo
                 $dadosPorUnidade[] = [
                     'id' => $tenant->id,
-                    'nome' => $tenant->name . ' (Banco de Dados Ausente)',
+                    'nome' => $tenant->name.' (Banco de Dados Ausente)',
                     'dominio' => $tenant->domains->first()->domain ?? '-',
                     'alunos' => 0,
                     'faturamento' => 0,
-                    'status_erro' => true // Marca para pintar de vermelho no front
+                    'status_erro' => true, // Marca para pintar de vermelho no front
                 ];
+
                 continue; // Pula para a próxima iteração do foreach
             }
 
@@ -53,7 +54,7 @@ class RelatorioCentralController extends Controller
                 'dominio' => $tenant->domains->first()->domain ?? '-',
                 'alunos' => $qtdAlunos,
                 'faturamento' => $faturamentoEstimado,
-                'status_erro' => false
+                'status_erro' => false,
             ];
 
             // Sai do tenant para voltar à central
@@ -65,9 +66,9 @@ class RelatorioCentralController extends Controller
                 'total_tenants' => $tenants->count(),
                 'total_alunos' => $totalAlunos,
                 'total_faturamento' => $totalFaturamento,
-                'ticket_medio' => $totalAlunos > 0 ? ($totalFaturamento / $totalAlunos) : 0
+                'ticket_medio' => $totalAlunos > 0 ? ($totalFaturamento / $totalAlunos) : 0,
             ],
-            'detalhes' => $dadosPorUnidade
+            'detalhes' => $dadosPorUnidade,
         ]);
     }
 }

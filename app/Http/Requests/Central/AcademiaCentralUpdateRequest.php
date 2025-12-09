@@ -9,15 +9,21 @@ class AcademiaCentralUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Apenas usuários autenticados (administradores da Central) podem atualizar tenants.
         return Auth::check();
     }
 
     public function rules(): array
     {
-        // 🚨 Regras de validação para a atualização (update)
         return [
-            'nome' => ['required', 'string', 'max:255'],
+            'nome' => ['required', 'string', 'max:50'],
         ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nome.required' => 'O Nome da Academia é obrigatório.',
+            'nome.string' => 'O Nome da Academia deve ser uma string.',
+            'nome.max' => 'O Nome da Academia não pode exceder 50 caracteres.',];
     }
 }

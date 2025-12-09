@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Stancl\Tenancy\Database\Models\Domain;
 use App\Models\Tenant;
+use Stancl\Tenancy\Database\Models\Domain;
 
 return [
     'tenant_model' => Tenant::class,
@@ -19,7 +19,7 @@ return [
     'central_domains' => [
         '127.0.0.1',            // O Stancl deve ignorar o acesso por IP
         'localhost',            // Ignorar localhost
-        'aplicacao.local'      // aplicacao.local (domínio raiz)
+        'aplicacao.local',      // aplicacao.local (domínio raiz)
     ],
 
     'middleware' => [

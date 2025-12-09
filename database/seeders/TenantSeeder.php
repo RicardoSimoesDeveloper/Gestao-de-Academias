@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Tenant;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class TenantSeeder extends Seeder
 {
@@ -40,9 +40,9 @@ class TenantSeeder extends Seeder
 
         // Cria tenant no banco central
         $tenant = Tenant::create([
-            'id'     => $id,
-            'name'   => $name,
-            'plano'  => 'premium',
+            'id' => $id,
+            'name' => $name,
+            'plano' => 'premium',
             'status' => 'ativo',
         ]);
 
@@ -55,8 +55,8 @@ class TenantSeeder extends Seeder
         $tenant->run(function () use ($email_admin, $senha_admin) {
 
             User::create([
-                'name'     => 'Administrador Tenant',
-                'email'    => $email_admin,
+                'name' => 'Administrador Tenant',
+                'email' => $email_admin,
                 'password' => $senha_admin,
             ]);
         });

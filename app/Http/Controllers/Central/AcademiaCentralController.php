@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tenant;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Central\AcademiaCentralIndexRequest;
 use App\Http\Requests\Central\AcademiaCentralStoreRequest;
 use App\Http\Requests\Central\AcademiaCentralUpdateRequest;
+use App\Models\Tenant;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class AcademiaCentralController extends Controller
 {
     /**
      * NOVO: Dashboard Geral (Cards e Métricas)
      */
-   public function dashboard()
+    public function dashboard()
     {
         // 1. Métrica: Total de Academias
         $totalTenants = Tenant::count();
@@ -26,7 +26,7 @@ class AcademiaCentralController extends Controller
 
         // 3. Métrica: Total de Alunos (Agregação Multi-Tenant)
         $totalAlunos = 0;
-        
+
         // Iteramos sobre todos os Tenants para calcular o total de alunos
         $tenants = Tenant::all();
 
@@ -34,11 +34,11 @@ class AcademiaCentralController extends Controller
             // Tenta inicializar o ambiente do tenant
             try {
                 tenancy()->initialize($tenant);
-                
+
                 // Agrega a contagem de alunos do banco do tenant
                 // Assumindo que a tabela é 'alunos' no Tenant DB
                 $totalAlunos += DB::table('alunos')->count();
-                
+
             } catch (\Stancl\Tenancy\Exceptions\TenantDatabaseDoesNotExistException $e) {
                 // Captura o erro, ignora este tenant e continua (sem quebrar a página)
             } catch (\Exception $e) {
@@ -66,29 +66,29 @@ class AcademiaCentralController extends Controller
      * AJUSTADO: Lista de Academias (Tabela)
      * Agora aponta para a pasta 'Tenants/List' que criamos
      */
-   // app/Http/Controllers/Central/TenantController.php
+    // app/Http/Controllers/Central/TenantController.php
 
     // app/Http/Controllers/Central/TenantController.php
 
-  public function index(AcademiaCentralIndexRequest $request) // 🚨 Injetando IndexRequest
+    public function index(AcademiaCentralIndexRequest $request) // 🚨 Injetando IndexRequest
     {
         $query = Tenant::with('domains');
 
         // Se o campo 'search' foi validado e está presente, aplicamos o filtro.
         if ($request->filled('search')) {
             $search = $request->search;
-            
-            $query->where(function($q) use ($search) {
-                $q->where('id', 'LIKE', "{$search}%") 
-                  ->orWhere('name', 'LIKE', "{$search}%"); 
+
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'LIKE', "{$search}%")
+                    ->orWhere('name', 'LIKE', "{$search}%");
             });
         }
 
         return Inertia::render('Central/Academias/CentralList', [
             'tenants' => $query->latest()
-                               ->paginate(10)
-                               ->withQueryString(), 
-            'filters' => $request->only(['search'])
+                ->paginate(10)
+                ->withQueryString(),
+            'filters' => $request->only(['search']),
         ]);
     }
 
@@ -103,41 +103,33 @@ class AcademiaCentralController extends Controller
     /**
      * Salvar Nova Academia (Mantido com pequeno ajuste no redirect)
      */
-    public function store(AcademiaCentralStoreRequest $request) // 🚨 Injetando StoreRequest
+    public function store(AcademiaCentralStoreRequest $request)
     {
-        // 1. A validação foi feita pelo Request. Usamos $request->validated() para dados limpos.
         $data = $request->validated();
-        
-        // 2. Definir o nome do domínio
-        $appDomain = env('APP_DOMAIN');
-        $subdomain = $data['id']; 
-        $domain = $subdomain . '.' . $appDomain;
 
-        // 3. Criação do Tenant (no banco central)
+        $appDomain = env('APP_DOMAIN');
+        $subdomain = $data['id'];
+        $domain = $subdomain.'.'.$appDomain;
+
         $tenant = Tenant::create([
             'id' => $subdomain,
-            'name' => $data['name'], 
+            'name' => $data['name'],
         ]);
 
-        // 4. Vincular o Domínio ao Tenant
         $tenant->domains()->create([
             'domain' => $domain,
         ]);
 
-        // 5. Configuração do Tenant (Migrations e Usuário Admin)
         $tenant->run(function () use ($data) {
             \App\Models\User::create([
-                'name' => 'Administrador', 
-                'email' => $data['email_admin'], 
-                'password' => Hash::make($data['senha_admin']), 
+                'name' => 'Administrador',
+                'email' => $data['email_admin'],
+                'password' => Hash::make($data['senha_admin']),
             ]);
         });
 
-        // 6. Redirecionamento
         return redirect()->route('tenants.index')->with('success', 'Academia criada e domínio configurado com sucesso!');
     }
-
-    // ... métodos dashboard, index, create, store já existem ...
 
     /**
      * Tela de Edição
@@ -148,7 +140,7 @@ class AcademiaCentralController extends Controller
         $tenant = Tenant::with('domains')->findOrFail($id);
 
         return Inertia::render('Central/Academias/CentralEdit', [
-            'tenant' => $tenant // <--- Estamos enviando a variável 'tenant' aqui
+            'tenant' => $tenant, // <--- Estamos enviando a variável 'tenant' aqui
         ]);
     }
 
@@ -160,10 +152,10 @@ class AcademiaCentralController extends Controller
         $tenant = Tenant::findOrFail($id);
         $data = $request->validated(); // Dados limpos
 
-        $tenant->update(['name' => $data['nome']]); 
+        $tenant->update(['name' => $data['nome']]);
 
         return redirect()->route('tenants.index', [], 303)
-                         ->with('success', 'Academia atualizada com sucesso!');
+            ->with('success', 'Academia atualizada com sucesso!');
     }
 
     /**
@@ -172,13 +164,13 @@ class AcademiaCentralController extends Controller
     public function destroy($id)
     {
         $tenant = Tenant::findOrFail($id);
-        
+
         // Deleta registro e banco de dados
         $tenant->delete();
 
         // A CORREÇÃO MÁGICA ESTÁ AQUI: ', [], 303'
         // Isso força o navegador a transformar o DELETE em GET ao redirecionar
         return redirect()->route('tenants.index', [], 303)
-                        ->with('success', 'Academia e banco de dados excluídos!');
+            ->with('success', 'Academia e banco de dados excluídos!');
     }
 }

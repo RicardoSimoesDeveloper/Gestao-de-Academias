@@ -2,23 +2,24 @@
 
 use App\Http\Controllers\Central\AcademiaCentralController;
 use App\Http\Controllers\Central\LoginCentralController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Central\RelatorioCentralController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
-$appDomain = env('APP_DOMAIN'); 
+$appDomain = env('APP_DOMAIN');
 
 // ----------------------------------------------------
 // --- ROTAS DO SISTEMA CENTRAL (Somente aplicacao.local) ---
 // ----------------------------------------------------
 
-Route::domain($appDomain)->group(function () { 
+Route::domain($appDomain)->group(function () {
 
     // --- ROTA RAIZ (Lógica de Redirecionamento) ---
     Route::get('/', function () {
         if (Auth::check()) {
             return redirect()->route('central.dashboard');
         }
+
         return redirect()->route('central.login');
     });
 
@@ -29,10 +30,10 @@ Route::domain($appDomain)->group(function () {
 
     // --- ÁREA ADMINISTRATIVA (Protegida) ---
     Route::middleware('auth')->prefix('admin')->group(function () {
-        
+
         // Dashboard Geral
         Route::get('/dashboard', [AcademiaCentralController::class, 'dashboard'])->name('central.dashboard');
-        
+
         // Academias (Lista e CRUD)
         Route::get('/academias', [AcademiaCentralController::class, 'index'])->name('tenants.index');
         Route::get('/nova-academia', [AcademiaCentralController::class, 'create'])->name('tenants.create');

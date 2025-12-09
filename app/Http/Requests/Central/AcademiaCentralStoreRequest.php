@@ -9,30 +9,37 @@ class AcademiaCentralStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Apenas usuários autenticados (administradores da Central) podem criar tenants.
         return Auth::check();
     }
 
     public function rules(): array
     {
-        // 🚨 Regras de validação para a criação (store)
         return [
-            // ID (Subdomínio) - Obrigatório e Único na tabela 'tenants'
-            'id' => ['required', 'string', 'max:255', 'unique:tenants,id'], 
-            'name' => ['required', 'string', 'max:255'], // Nome da Academia
-            'email_admin' => ['required', 'email'], // Email do Admin
-            'senha_admin' => ['required', 'string', 'min:6'], // Senha do Admin
+            'id' => ['required', 'string', 'max:50', 'unique:tenants,id'],
+            'name' => ['required', 'string', 'max:50'],
+            'email_admin' => ['required', 'email'],
+            'senha_admin' => ['required', 'string', 'min:6'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'id.unique' => 'Este identificador (ID/Subdomínio) já está em uso.',
-            'id.required' => 'O ID/Subdomínio é obrigatório.',
-            'name.required' => 'O Nome da Academia é obrigatório.',
+            'id.required' => 'O ID da Academia Central é obrigatório.',
+            'id.string' => 'O ID da Academia Central deve ser uma string.',
+            'id.max' => 'O ID da Academia Central pode ter no máximo 50 caracteres.',
+            'id.unique' => 'Este ID ja esta em uso por outra Academia Central.',
+
+            'name.required' => 'O Nome da Academia Central é obrigatório.',
+            'name.string' => 'O Nome da Academia Central deve ser uma string.',
+            'name.max' => 'O Nome da Academia Central pode ter no máximo 50 caracteres.',
+
             'email_admin.required' => 'O E-mail do Administrador é obrigatório.',
-            'senha_admin.min' => 'A senha deve ter no mínimo 6 caracteres.',
+            'email_admin.email' => 'O E-mail do Administrador deve ser um endereço de e-mail válido.',
+
+            'senha_admin.required' => 'A senha do Administrador é obrigatória.',
+            'senha_admin.string' => 'A senha do Administrador deve ser uma string.',
+            'senha_admin.min' => 'A senha do Administrador deve ter no mínimo 6 caracteres.',
         ];
     }
 }

@@ -15,8 +15,8 @@ class CentralUserSeeder extends Seeder
      */
     public function run()
     {
-        if (!User::where('email', 'admin@central.com')->exists()) {
-            
+        if (! User::where('email', 'admin@central.com')->exists()) {
+
             User::create([
                 'name' => 'Administrador Central',
                 'email' => 'admin@central.com',
