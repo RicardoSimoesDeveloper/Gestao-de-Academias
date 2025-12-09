@@ -1,59 +1,178 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏋️ Sistema de Gestão de Academias (Multi-Tenant)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-12.x-red?style=for-the-badge&logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8.2+-blue?style=for-the-badge&logo=php)
+![Vue](https://img.shields.io/badge/Vue.js-3-42b883?style=for-the-badge&logo=vue.js)
+![Inertia](https://img.shields.io/badge/Inertia.js-Adapting-blueviolet?style=for-the-badge)
+![Multi-Tenant](https://img.shields.io/badge/Multi--Tenant-Stancl%2FTenancy-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-## About Laravel
+Um moderno **Sistema de Gestão de Academias** desenvolvido em **Laravel 12**, com arquitetura **Multi-Tenant (bancos separados)** utilizando `stancl/tenancy`, e frontend em **Vue 3 + Inertia.js**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Cada academia (Tenant) possui seu **próprio banco de dados isolado**, garantindo segurança, escalabilidade e alta performance para um ambiente SaaS.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📑 Índice
 
-## Learning Laravel
+- [✨ Recursos](#-recursos)
+- [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
+- [📦 Estrutura do Projeto](#-estrutura-do-projeto)
+- [🛠 Como Instalar e Rodar](#-como-instalar-e-rodar)
+- [🌐 Configuração de Domínios Locais](#-configuração-de-domínios-locais)
+- [🗄 Banco de Dados e Migrações](#-banco-de-dados-e-migrações)
+- [▶️ Execução do Projeto](#️-execução-do-projeto)
+- [🔐 Acesso ao Sistema](#-acesso-ao-sistema)
+- [📂 Estrutura de Pastas](#-estrutura-de-pastas)
+- [🤝 Contribuição](#-contribuição)
+- [📄 Licença](#-licença)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ✨ Recursos
 
-## Laravel Sponsors
+- ✔️ Multi-tenancy completo com bancos independentes  
+- ✔️ Criação automática de tenants com migrações isoladas  
+- ✔️ Painel central (admin) para gerenciar academias  
+- ✔️ Painel do tenant para gerenciar alunos, planos e assinaturas  
+- ✔️ Autenticação avançada do Laravel 12  
+- ✔️ Frontend leve com Vue 3 + Inertia.js  
+- ✔️ Estrutura escalável pronta para SaaS  
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🚀 Tecnologias Utilizadas
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### **Backend**
+- Laravel **12.x**
+- PHP **8.2+**
+- Stancl/Tenancy
+- MySQL
 
-## Contributing
+### **Frontend**
+- Vue.js 3
+- Inertia.js
+- Vite
+- Tailwind
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### **Outros**
+- Composer
+- Node.js / npm
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📦 Estrutura do Projeto
 
-## Security Vulnerabilities
+app/
+├── Http/
+│ ├── Controllers/
+│ │ ├── Central/
+│ │ └── Tenant/
+| ├── Requests/
+│ │ ├── Central/
+│ │ └── Tenant/
+├── Models/
+resources/
+├── js/
+│ └── Components/
+│ └── Layouts/
+│ ├── Pages/
+│ │ ├── Central/
+│ │ └── Tenant/
+routes/
+├── web.php
+└── tenant.php
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🛠 Como Instalar e Rodar
+
+### 1️⃣ Pré-requisitos
+
+Tenha instalado:
+
+- PHP 8.2+
+- Composer
+- Node.js + npm
+- MySQL
+- Extensões padrão do Laravel 12
+
+---
+
+### 2️⃣ Instalação
+
+#### **Clone o projeto**
+
+git clone [URL_DO_REPOSITORIO]
+cd [NOME_DO_PROJETO]
+
+Instale dependências
+composer install
+npm install
+
+
+Configure o .env
+cp .env.example .env
+php artisan key:generate
+
+3️⃣ Configuração do .env
+
+DB_DATABASE	academia_central	
+APP_URL	http://aplicacao.local:8000
+APP_DOMAIN	aplicacao.local
+TENANT_DB_USERNAME	root
+
+🌐 Configuração de Domínios Locais
+
+Edite seu arquivo hosts:
+
+Windows: C:\Windows\System32\drivers\etc\hosts
+Linux: /etc/hosts
+
+127.0.0.1 aplicacao.local
+127.0.0.1 academia1.aplicacao.local
+127.0.0.1 academia2.aplicacao.local
+
+🗄 Banco de Dados e Migrações
+Criar banco central:
+
+Crie o banco academia_central.
+
+Rodar migrações centrais:
+php artisan migrate
+
+Rodar seeds para criar usuario central e 2 Tenants:
+php artisan db:seed --class=CentralUserSeeder
+php artisan db:seed --class=TenantSeeder
+
+Credenciais padrão:
+
+Email: admin@aplicacao.local
+
+Senha: 123456
+
+▶️ Execução do Projeto
+Backend (Laravel)
+php artisan serve
+
+Frontend (Vite)
+npm run dev
+
+🔐 Acesso ao Sistema
+Painel Central (Admin)
+http://aplicacao.local:8000
+
+
+Login:
+
+admin@aplicacao.local
+
+password: 123456
+
+Painel da Academia (Tenant)
+http://corpus.aplicacao.local:8000 ou acesse direto pelo link no menu Academias
+Use contas criadas no banco do tenant.
+
+
+
