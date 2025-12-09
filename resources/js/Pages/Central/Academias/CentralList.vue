@@ -114,7 +114,7 @@ watch(search, debounce((value) => {
 const confirmarExclusao = (tenant) => {
     Swal.fire({
         title: 'Tem certeza?',
-        text: `Você está prestes a excluir a academia "${tenant.nome}" e apagar TODO o banco de dados dela.`,
+        text: `Você está prestes a excluir a academia "${tenant.name}" e apagar TODO o banco de dados dela.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
