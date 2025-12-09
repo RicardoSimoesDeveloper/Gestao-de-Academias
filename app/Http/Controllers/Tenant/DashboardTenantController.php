@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Aluno;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class DashboardTenantController extends Controller
 {
@@ -20,6 +21,18 @@ class DashboardTenantController extends Controller
             ? round(($alunosInativos / $totalAlunos) * 100, 1)
             : 0;
 
+        // ---------------------------------------
+        // 📊 NOVOS ALUNOS POR MÊS (últimos 6 meses)
+        // ---------------------------------------
+        $alunosPorMes = Aluno::select(
+                DB::raw("DATE_FORMAT(created_at, '%Y-%m') as mes"),
+                DB::raw('COUNT(*) as total')
+            )
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->groupBy('mes')
+            ->orderBy('mes')
+            ->get();
+
         return Inertia::render('Tenant/TenantDashboard', [
             'metrics' => [
                 'totalAlunos' => $totalAlunos,
@@ -28,8 +41,8 @@ class DashboardTenantController extends Controller
                 'novosMes' => $novosAlunosMes,
                 'taxaRotatividade' => $rotatividade,
             ],
-            // A função tenant() é fornecida pelo Stancl Tenancy
             'academiaNome' => tenant('nome'),
+            'graficoAlunos' => $alunosPorMes, // <- enviado ao frontend
         ]);
     }
 }
