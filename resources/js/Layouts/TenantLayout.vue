@@ -3,10 +3,6 @@
         <aside class="w-64 bg-gray-900 text-white flex flex-col fixed h-full transition-all duration-300 z-10">
             <div class="h-20 flex flex-col items-center justify-center border-b border-gray-800 bg-gray-900 px-2 text-center">
                 <span class="text-sm font-bold tracking-wider text-blue-500 uppercase leading-tight">
-                    Academia
-                </span>
-                
-                <span class="text-xs font-semibold text-gray-400 mt-1 truncate px-2">
                     {{ academiaNome }}
                 </span>
             </div>
