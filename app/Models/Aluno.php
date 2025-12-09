@@ -21,6 +21,7 @@ class Aluno extends Model
             'email',
             'data_nascimento',
             'status',
+            'plano_id',
         ];
 
     protected $dates =
@@ -31,4 +32,9 @@ class Aluno extends Model
     protected $casts = [
         'data_nascimento' => 'date',
     ];
+
+    public function plano()
+    {
+        return $this->belongsTo(Plano::class, 'plano_id');
+    }
 }

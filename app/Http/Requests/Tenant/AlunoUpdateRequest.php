@@ -34,6 +34,7 @@ class AlunoUpdateRequest extends FormRequest
 
             'data_nascimento' => ['nullable', 'date'],
             'status' => ['required', 'string', 'in:ativo,inativo,suspenso'],
+            'plano_id' => ['nullable', 'exists:planos,id'],
         ];
     }
 
@@ -55,6 +56,8 @@ class AlunoUpdateRequest extends FormRequest
 
             'status.required' => 'O Status do Aluno é obrigatório.',
             'status.in' => 'O Status do Aluno deve ser um dos seguintes valores: ativo, inativo, suspenso.',
+
+            'plano_id.exists' => 'O Plano selecionado nao existe.',
         ];
     }
 }

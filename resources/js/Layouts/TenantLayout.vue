@@ -7,8 +7,8 @@
                 </span>
             </div>
 
-            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-                
+           <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+    
                 <SidebarLink href="/dashboard" activePrefix="/dashboard">
                     <template #icon>
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
@@ -22,7 +22,14 @@
                     </template>
                     Alunos
                 </SidebarLink>
-            
+                
+                <SidebarLink href="/planos" activePrefix="/planos">
+                    <template #icon>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </template>
+                    Catálogo de Planos
+                </SidebarLink>
+                
             </nav>
 
             <div class="p-4 border-t border-gray-800">

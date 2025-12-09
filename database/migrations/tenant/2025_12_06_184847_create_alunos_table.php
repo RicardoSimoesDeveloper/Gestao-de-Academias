@@ -18,8 +18,12 @@ return new class extends Migration
             $table->string('email', 50)->nullable();
             $table->date('data_nascimento')->nullable();
             $table->string('status')->default('ativo');
+            $table->unsignedBigInteger('plano_id')->nullable();
+           
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('plano_id')->references('id')->on('planos');
         });
     }
 

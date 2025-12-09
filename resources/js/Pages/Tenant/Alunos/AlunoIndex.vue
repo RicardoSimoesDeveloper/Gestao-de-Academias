@@ -2,40 +2,38 @@
 import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import TenantLayout from '@/Layouts/TenantLayout.vue'; 
-import StatusBadge from '@/Components/Ui/Shared/StatusBadge.vue'; // 🚨 Novo import
-import Pagination from '@/Components/Ui/Shared/Pagination.vue';     // 🚨 Novo import
+import StatusBadge from '@/Components/Ui/Shared/StatusBadge.vue';
+import Pagination from '@/Components/Ui/Shared/Pagination.vue';
 import debounce from 'lodash/debounce';
 import Swal from 'sweetalert2';
 
 const props = defineProps({
-    alunos: Object, // Deve ser um objeto paginado do Laravel/Inertia
+    alunos: Object,    // Paginação
     filters: Object,
 });
 
 const search = ref(props.filters.search || '');
 
-// Lógica de busca com debounce para evitar requisições a cada tecla digitada
 watch(search, debounce((value) => {
     router.get('/alunos', { search: value }, {
         preserveState: true,
-        replace: true, 
-        only: ['alunos'] 
+        replace: true,
+        only: ['alunos']
     });
 }, 300));
 
-// Função de exclusão que usa o SweetAlert2 para confirmação
-const destroy = (aluno) => { 
+const destroy = (aluno) => {
     const alunoId = aluno.id;
 
     if (!alunoId) {
         console.error("Erro fatal: ID do aluno está ausente.");
         Swal.fire('Erro!', 'Não foi possível identificar o aluno para exclusão.', 'error');
-        return; 
+        return;
     }
 
     Swal.fire({
-        title: `Excluir ${aluno.nome}?`, 
-        text: "O aluno será movido para a lixeira. Esta ação pode ser desfeita.",
+        title: `Excluir ${aluno.nome}?`,
+        text: "O aluno será movido para a tixeira. Esta ação pode ser desfeita.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -44,15 +42,14 @@ const destroy = (aluno) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Requisição DELETE para o endpoint do recurso
             router.delete(`/alunos/${alunoId}`, {
                 preserveState: true,
                 onSuccess: () => {
                     Swal.fire('Excluído!', 'O aluno foi movido para a lixeira.', 'success');
                 },
                 onError: (errors) => {
-                     console.error(errors);
-                     Swal.fire('Falha!', 'Houve um erro ao tentar excluir o aluno.', 'error');
+                    console.error(errors);
+                    Swal.fire('Falha!', 'Houve um erro ao tentar excluir o aluno.', 'error');
                 }
             });
         }
@@ -74,7 +71,10 @@ const destroy = (aluno) => {
                         placeholder="Buscar por nome ou CPF..." 
                         class="pl-10 pr-4 py-2 border rounded-lg w-full"
                     />
-                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
                 </div>
                 
                 <Link href="/alunos/create" 
@@ -89,8 +89,12 @@ const destroy = (aluno) => {
                         <tr>
                             <th class="p-4 border-b font-semibold text-gray-600">ID</th>
                             <th class="p-4 border-b font-semibold text-gray-600">Nome</th>
-                            <th class="p-4 border-b font-semibold text-gray-600">Email</th> 
+                            <th class="p-4 border-b font-semibold text-gray-600">Email</th>
                             <th class="p-4 border-b font-semibold text-gray-600">CPF</th>
+
+                            <!-- NOVA COLUNA DO PLANO -->
+                            <th class="p-4 border-b font-semibold text-gray-600">Plano</th>
+
                             <th class="p-4 border-b font-semibold text-gray-600">Status</th>
                             <th class="p-4 border-b font-semibold text-gray-600 text-right">Ações</th>
                         </tr>
@@ -99,11 +103,18 @@ const destroy = (aluno) => {
                         <tr v-for="aluno in alunos.data" :key="aluno.id" class="hover:bg-gray-50 border-b last:border-0">
                             <td class="p-4 text-gray-500 text-sm">#{{ aluno.id }}</td>
                             <td class="p-4 font-medium text-gray-800">{{ aluno.nome }}</td>
-                            <td class="p-4 text-gray-600">{{ aluno.email }}</td> 
+                            <td class="p-4 text-gray-600">{{ aluno.email }}</td>
                             <td class="p-4 text-gray-600">{{ aluno.cpf }}</td>
+
+                            <!-- MOSTRAR O NOME DO PLANO -->
+                            <td class="p-4 text-gray-600">
+                                {{ aluno.plano?.nome ?? '—' }}
+                            </td>
+
                             <td class="p-4">
                                 <StatusBadge :status="aluno.status" />
                             </td>
+
                             <td class="p-4 text-right flex justify-end gap-3">
                                 <Link :href="`/alunos/${aluno.id}/edit`" 
                                     class="text-blue-600 hover:text-blue-800 font-medium text-sm">
@@ -116,8 +127,9 @@ const destroy = (aluno) => {
                                 </button>
                             </td>
                         </tr>
+
                         <tr v-if="alunos.data.length === 0">
-                            <td colspan="6" class="p-8 text-center text-gray-500"> 
+                            <td colspan="7" class="p-8 text-center text-gray-500">
                                 Nenhum aluno encontrado.
                             </td>
                         </tr>

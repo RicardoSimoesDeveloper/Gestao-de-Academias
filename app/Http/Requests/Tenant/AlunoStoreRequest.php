@@ -20,6 +20,7 @@ class AlunoStoreRequest extends FormRequest
             'cpf' => ['nullable', 'string', 'max:14', 'unique:alunos,cpf'],
             'data_nascimento' => ['nullable', 'date'],
             'status' => ['required', 'string', 'in:ativo,inativo,suspenso'],
+            'plano_id' => ['nullable', 'exists:planos,id'],
         ];
     }
 
@@ -41,6 +42,8 @@ class AlunoStoreRequest extends FormRequest
 
             'status.required' => 'O Status do Aluno é obrigatório.',
             'status.in' => 'O Status do Aluno deve ser um dos seguintes valores: ativo, inativo, suspenso.',
+
+            'plano_id.exists' => 'O Plano selecionado é inválido.',
         ];
     }
 }
