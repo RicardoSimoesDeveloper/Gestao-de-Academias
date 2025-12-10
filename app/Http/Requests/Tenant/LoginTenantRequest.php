@@ -27,7 +27,7 @@ class LoginTenantRequest extends FormRequest
         ]);
     }
 
-      public function messages(): array
+    public function messages(): array
     {
         return [
             'email.required' => 'O campo e-mail é obrigatório.',

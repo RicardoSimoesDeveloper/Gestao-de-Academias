@@ -1,10 +1,6 @@
 <script setup>
 import CentralLayout from '@/Layouts/CentralLayout.vue'
 import { defineProps } from 'vue'
-
-/* =============================
-   📊 IMPORTAÇÃO DO CHART JS
-============================= */
 import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -17,17 +13,11 @@ import {
 
 ChartJS.register(Title, Tooltip, BarElement, CategoryScale, LinearScale)
 
-/* =============================
-   📥 PROPS RECEBIDAS
-============================= */
 const props = defineProps({
   resumo: Object,
   detalhes: Array,
 })
 
-/* =============================
-   🧮 DADOS DO GRÁFICO
-============================= */
 const chartData = {
   labels: props.detalhes.map((d) => d.nome),
   datasets: [
@@ -45,9 +35,6 @@ const chartOptions = {
   maintainAspectRatio: false,
 }
 
-/* =============================
-   💰 FORMATAÇÃO DE MOEDA
-============================= */
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -55,9 +42,6 @@ const formatCurrency = (value) => {
   }).format(value)
 }
 
-/* =============================
-   🎨 COR DA LINHA DA TABELA
-============================= */
 const rowClass = (statusErro) => {
   return statusErro ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-gray-50'
 }

@@ -27,7 +27,7 @@ ChartJS.register(
 const props = defineProps({
   metrics: Object,
   academiaNome: String,
-  graficoAlunos: Array, // recebido do backend
+  graficoAlunos: Array,
 });
 
 // Dados dos cards
@@ -68,7 +68,7 @@ const chartData = {
       fill: true,
       borderColor: '#3b82f6',
       backgroundColor: 'rgba(59, 130, 246, 0.2)',
-      tension: 0.3, // curva suave
+      tension: 0.3,
       pointBackgroundColor: '#3b82f6',
       pointBorderColor: '#ffffff',
       pointRadius: 5,

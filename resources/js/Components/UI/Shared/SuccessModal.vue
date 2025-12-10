@@ -1,3 +1,14 @@
+<script setup>
+defineProps({
+    show: {
+        type: Boolean,
+        required: true
+    }
+});
+
+defineEmits(['close']);
+</script>
+
 <template>
     <Transition name="modal-fade">
         <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm transition-opacity">
@@ -22,16 +33,6 @@
     </Transition>
 </template>
 
-<script setup>
-defineProps({
-    show: {
-        type: Boolean,
-        required: true
-    }
-});
-
-defineEmits(['close']);
-</script>
 
 <style scoped>
 /* Transição básica para o modal (opcional, mas profissional) */

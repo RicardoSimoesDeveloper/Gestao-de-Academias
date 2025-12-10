@@ -5,11 +5,11 @@ declare(strict_types=1);
 use App\Http\Controllers\Tenant\AlunoTenantController;
 use App\Http\Controllers\Tenant\DashboardTenantController;
 use App\Http\Controllers\Tenant\LoginTenantController;
+use App\Http\Controllers\Tenant\PlanoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use App\Http\Controllers\Tenant\PlanoController;
 
 // O grupo middleware principal inicializa o tenant
 Route::middleware([
@@ -22,6 +22,7 @@ Route::middleware([
     Route::post('/login', [LoginTenantController::class, 'store']);
     Route::post('/logout', [LoginTenantController::class, 'destroy'])->name('logout');
 
+     // --- ROTA RAIZ (Lógica de Redirecionamento) ---
     Route::get('/', function () {
         if (Auth::check()) {
             return redirect('/dashboard');
@@ -31,10 +32,10 @@ Route::middleware([
     });
 
     Route::middleware('auth')->group(function () {
-         // --- ROTAS PARA DASHBOARD ---
+        // --- ROTAS PARA DASHBOARD ---
         Route::get('/dashboard', [DashboardTenantController::class, 'index'])->name('dashboard');
 
-         // --- ROTAS DE ALUNOS ---
+        // --- ROTAS DE ALUNOS ---
         Route::get('/alunos', [AlunoTenantController::class, 'index'])->name('alunos.index');
         Route::get('/alunos/create', [AlunoTenantController::class, 'create'])->name('alunos.create');
         Route::post('/alunos', [AlunoTenantController::class, 'store'])->name('alunos.store');

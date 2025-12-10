@@ -8,7 +8,7 @@ import debounce from 'lodash/debounce';
 import Swal from 'sweetalert2';
 
 const props = defineProps({
-    alunos: Object,    // Paginação
+    alunos: Object,
     filters: Object,
 });
 

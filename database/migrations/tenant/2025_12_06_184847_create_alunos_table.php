@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('data_nascimento')->nullable();
             $table->string('status')->default('ativo');
             $table->unsignedBigInteger('plano_id')->nullable();
-           
+
             $table->softDeletes();
             $table->timestamps();
 

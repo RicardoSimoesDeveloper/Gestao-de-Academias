@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Aluno;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class DashboardTenantController extends Controller
 {
@@ -21,13 +21,11 @@ class DashboardTenantController extends Controller
             ? round(($alunosInativos / $totalAlunos) * 100, 1)
             : 0;
 
-        // ---------------------------------------
-        // 📊 NOVOS ALUNOS POR MÊS (últimos 6 meses)
-        // ---------------------------------------
+        // Dados para o gráfico de novos alunos por mês
         $alunosPorMes = Aluno::select(
-                DB::raw("DATE_FORMAT(created_at, '%Y-%m') as mes"),
-                DB::raw('COUNT(*) as total')
-            )
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m') as mes"),
+            DB::raw('COUNT(*) as total')
+        )
             ->where('created_at', '>=', now()->subMonths(6))
             ->groupBy('mes')
             ->orderBy('mes')

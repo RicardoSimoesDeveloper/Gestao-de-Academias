@@ -12,8 +12,8 @@ import {
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend)
 
 defineProps({
-    labels: Array,         // nomes das academias
-    dataValues: Array,     // número de alunos
+    labels: Array,
+    dataValues: Array,
 })
 </script>
 

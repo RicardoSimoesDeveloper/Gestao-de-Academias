@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Tenant;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class AlunoUpdateRequest extends FormRequest
 {
@@ -43,7 +43,7 @@ class AlunoUpdateRequest extends FormRequest
         return [
             'nome.required' => 'O Nome do Aluno é obrigatório.',
             'nome.max' => 'O Nome do Aluno pode ter no máximo 50 caracteres.',
-            
+
             'email.required' => 'O E-mail do Aluno é obrigatório.',
             'email.email' => 'O E-mail do Aluno deve ser um endereço de e-mail válido.',
             'email.max' => 'O E-mail do Aluno pode ter no máximo 255 caracteres.',

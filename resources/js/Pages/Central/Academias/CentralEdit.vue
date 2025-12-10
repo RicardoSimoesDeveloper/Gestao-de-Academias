@@ -1,3 +1,38 @@
+<script setup>
+import CentralLayout from '@/Layouts/CentralLayout.vue';
+import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import SuccessModal from '@/Components/Ui/Shared/SuccessModal.vue'; 
+
+const props = defineProps({
+    tenant: Object
+});
+
+const showModal = ref(false);
+
+const form = useForm({
+    nome: props.tenant.name,
+});
+
+const salvarCadastro = () => {
+    const id = String(props.tenant.id).trim();
+    const urlFinal = `/admin/academias/${id}`;
+
+    form.put(urlFinal, {
+        onSuccess: () => {
+            showModal.value = true;
+        },
+        onError: (errors) => {
+            console.error('Erro ao salvar:', errors);
+        }
+    });
+};
+
+const fecharModal = () => {
+    showModal.value = false;
+};
+</script>
+
 <template>
     <CentralLayout title="Editar Academia">
         <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 max-w-3xl mx-auto">
@@ -70,41 +105,3 @@
 
     </CentralLayout>
 </template>
-
-<script setup>
-import CentralLayout from '@/Layouts/CentralLayout.vue';
-import { useForm, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
-// 🚨 Importe o novo componente
-import SuccessModal from '@/Components/Ui/Shared/SuccessModal.vue'; 
-
-const props = defineProps({
-    tenant: Object
-});
-
-// Estado para controlar o modal
-const showModal = ref(false);
-
-const form = useForm({
-    nome: props.tenant.name,
-});
-
-const salvarCadastro = () => {
-    const id = String(props.tenant.id).trim();
-    const urlFinal = `/admin/academias/${id}`;
-
-    form.put(urlFinal, {
-        onSuccess: () => {
-            // Ao invés de usar o alert, ativamos o modal
-            showModal.value = true;
-        },
-        onError: (errors) => {
-            console.error('Erro ao salvar:', errors);
-        }
-    });
-};
-
-const fecharModal = () => {
-    showModal.value = false;
-};
-</script>

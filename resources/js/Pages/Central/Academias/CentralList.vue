@@ -1,3 +1,51 @@
+<script setup>
+import CentralLayout from '@/Layouts/CentralLayout.vue';
+import { Link, router } from '@inertiajs/vue3';
+import Swal from 'sweetalert2';
+import { ref, watch } from 'vue';
+import debounce from 'lodash/debounce';
+
+const props = defineProps({
+    tenants: Object,
+    filters: Object 
+});
+
+const search = ref(props.filters?.search || '');
+
+watch(search, debounce((value) => {
+    router.get('/admin/academias', { search: value }, {
+        preserveState: true,
+        replace: true,
+        only: ['tenants']
+    });
+}, 300)); 
+
+const confirmarExclusao = (tenant) => {
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: `Você está prestes a excluir a academia "${tenant.name}" e apagar TODO o banco de dados dela.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, excluir tudo!',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.delete(`/admin/academias/${tenant.id}`, {
+                onSuccess: () => {
+                    Swal.fire('Excluído!', 'A academia e os dados foram removidos.', 'success');
+                },
+                onError: () => {
+                    Swal.fire('Erro!', 'Ocorreu um problema ao tentar excluir.', 'error');
+                }
+            });
+        }
+    });
+};
+</script>
+
 <template>
     <CentralLayout title="Gestão de Unidades">
         <div class="flex justify-between items-center mb-6">
@@ -87,52 +135,3 @@
         
     </CentralLayout>
 </template>
-
-<script setup>
-import CentralLayout from '@/Layouts/CentralLayout.vue';
-import { Link, router } from '@inertiajs/vue3';
-import Swal from 'sweetalert2';
-import { ref, watch } from 'vue';
-import debounce from 'lodash/debounce';
-
-// 🚨 MUDANÇA AQUI: Agora esperamos um Objeto (Paginator), não um Array
-const props = defineProps({
-    tenants: Object,
-    filters: Object 
-});
-
-const search = ref(props.filters?.search || '');
-
-watch(search, debounce((value) => {
-    router.get('/admin/academias', { search: value }, {
-        preserveState: true,
-        replace: true,
-        only: ['tenants']
-    });
-}, 300)); 
-
-const confirmarExclusao = (tenant) => {
-    Swal.fire({
-        title: 'Tem certeza?',
-        text: `Você está prestes a excluir a academia "${tenant.name}" e apagar TODO o banco de dados dela.`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sim, excluir tudo!',
-        cancelButtonText: 'Cancelar',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            router.delete(`/admin/academias/${tenant.id}`, {
-                onSuccess: () => {
-                    Swal.fire('Excluído!', 'A academia e os dados foram removidos.', 'success');
-                },
-                onError: () => {
-                    Swal.fire('Erro!', 'Ocorreu um problema ao tentar excluir.', 'error');
-                }
-            });
-        }
-    });
-};
-</script>

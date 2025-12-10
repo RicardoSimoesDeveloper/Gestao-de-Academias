@@ -16,7 +16,8 @@ class User extends Authenticatable
         $this->connection = tenant() ? 'tenant' : 'mysql';
     }
 
-    protected $fillable = [
+    protected $fillable =
+    [
         'name',
         'email',
         'password',

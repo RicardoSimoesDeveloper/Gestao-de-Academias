@@ -1,3 +1,30 @@
+<script setup>
+import { router, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import SidebarLink from '@/Components/Layout/SidebarLink.vue'; 
+
+const page = usePage();
+
+const academiaNome = page.props.academiaNome || 'Unidade'; 
+
+// Lógica segura para obter o usuário logado e a inicial
+const user = computed(() => {
+    const authUser = page.props.auth ? page.props.auth.user : null;
+    return {
+        name: authUser ? authUser.name : 'Admin',
+        initial: authUser ? authUser.name.charAt(0).toUpperCase() : 'A',
+    };
+});
+
+defineProps({
+    title: String
+});
+
+const logout = () => {
+    router.post('/logout'); 
+};
+</script>
+
 <template>
     <div class="min-h-screen bg-gray-100 flex">
         <aside class="w-64 bg-gray-900 text-white flex flex-col fixed h-full transition-all duration-300 z-10">
@@ -56,31 +83,3 @@
     </div>
 </template>
 
-<script setup>
-import { router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
-// 🚨 Importe o novo componente
-import SidebarLink from '@/Components/Layout/SidebarLink.vue'; 
-
-const page = usePage();
-
-// Puxa o nome da academia e o usuário de forma segura
-const academiaNome = page.props.academiaNome || 'Unidade'; 
-
-// 🚨 Lógica segura para obter o usuário logado e a inicial
-const user = computed(() => {
-    const authUser = page.props.auth ? page.props.auth.user : null;
-    return {
-        name: authUser ? authUser.name : 'Admin',
-        initial: authUser ? authUser.name.charAt(0).toUpperCase() : 'A',
-    };
-});
-
-defineProps({
-    title: String
-});
-
-const logout = () => {
-    router.post('/logout'); 
-};
-</script>

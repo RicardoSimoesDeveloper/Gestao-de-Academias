@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Central;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+use Stancl\Tenancy\Exceptions\TenantDatabaseDoesNotExistException;
 
 class RelatorioCentralController extends Controller
 {
@@ -21,24 +23,22 @@ class RelatorioCentralController extends Controller
             // BLINDAGEM: Tenta conectar. Se o banco não existir, captura o erro.
             try {
                 tenancy()->initialize($tenant);
-            } catch (\Stancl\Tenancy\Exceptions\TenantDatabaseDoesNotExistException $e) {
-                // Se der erro, adiciona na lista como "Erro" e pula para o próximo
+            } catch (TenantDatabaseDoesNotExistException $e) {
                 $dadosPorUnidade[] = [
                     'id' => $tenant->id,
                     'nome' => $tenant->name.' (Banco de Dados Ausente)',
                     'dominio' => $tenant->domains->first()->domain ?? '-',
                     'alunos' => 0,
                     'faturamento' => 0,
-                    'status_erro' => true, // Marca para pintar de vermelho no front
+                    'status_erro' => true,
                 ];
 
-                continue; // Pula para a próxima iteração do foreach
+                continue;
             }
 
             // --- Se chegou aqui, o banco existe ---
-
             try {
-                $qtdAlunos = \Illuminate\Support\Facades\DB::table('alunos')->count();
+                $qtdAlunos = DB::table('alunos')->count();
             } catch (\Exception $e) {
                 $qtdAlunos = 0;
             }

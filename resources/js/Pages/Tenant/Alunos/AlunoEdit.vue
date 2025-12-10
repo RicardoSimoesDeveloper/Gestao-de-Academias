@@ -5,7 +5,7 @@ import TenantLayout from '@/Layouts/TenantLayout.vue';
 
 const props = defineProps({
     aluno: Object,
-    planos: Array, // 👈 lista de planos vinda do controller
+    planos: Array,
 });
 
 // Inicializa o formulário com os dados do aluno
@@ -50,7 +50,6 @@ const statusOptions = ref([
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
-                    <!-- Nome -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Nome Completo <span class="text-red-500">*</span>
@@ -63,7 +62,6 @@ const statusOptions = ref([
                         </div>
                     </div>
 
-                    <!-- Email -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Email <span class="text-red-500">*</span>
@@ -76,7 +74,6 @@ const statusOptions = ref([
                         </div>
                     </div>
 
-                    <!-- CPF -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">CPF</label>
                         <input v-model="form.cpf" type="text"
@@ -86,7 +83,6 @@ const statusOptions = ref([
                         </div>
                     </div>
 
-                    <!-- Data de Nascimento -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Data de Nascimento
@@ -98,7 +94,6 @@ const statusOptions = ref([
                         </div>
                     </div>
 
-                    <!-- Status -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Status <span class="text-red-500">*</span>
@@ -121,7 +116,6 @@ const statusOptions = ref([
                         </div>
                     </div>
 
-                    <!-- Plano (NOVO) -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Plano do Aluno <span class="text-red-500">*</span>
@@ -146,7 +140,6 @@ const statusOptions = ref([
 
                 </div>
 
-                <!-- Botões -->
                 <div class="mt-8 pt-5 border-t flex justify-end gap-3">
                     <Link href="/alunos"
                         class="px-6 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition">

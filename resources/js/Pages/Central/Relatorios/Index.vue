@@ -3,11 +3,10 @@ import CentralLayout from '@/Layouts/CentralLayout.vue';
 import { defineProps } from 'vue';
 
 const props = defineProps({
-    resumo: Object, // Contém total_tenants, total_alunos, etc.
-    detalhes: Array, // Tabela com dados por unidade
+    resumo: Object,
+    detalhes: Array,
 });
 
-// Helper para formatar moeda
 const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
         style: 'currency',
@@ -15,7 +14,6 @@ const formatCurrency = (value) => {
     }).format(value);
 };
 
-// Helper para determinar a classe de erro (banco ausente)
 const rowClass = (status_erro) => {
     return status_erro ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-gray-50';
 };

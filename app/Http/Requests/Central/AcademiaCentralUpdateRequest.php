@@ -24,6 +24,6 @@ class AcademiaCentralUpdateRequest extends FormRequest
         return [
             'nome.required' => 'O Nome da Academia é obrigatório.',
             'nome.string' => 'O Nome da Academia deve ser uma string.',
-            'nome.max' => 'O Nome da Academia não pode exceder 50 caracteres.',];
+            'nome.max' => 'O Nome da Academia não pode exceder 50 caracteres.', ];
     }
 }

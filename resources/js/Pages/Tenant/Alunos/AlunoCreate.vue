@@ -4,7 +4,6 @@ import TenantLayout from '@/Layouts/TenantLayout.vue';
 import FormInput from '@/Components/Ui/Form/FormInput.vue';
 import { ref } from 'vue';
 
-// Recebe planos enviados pelo controller
 const props = defineProps({
     planos: Array,
 });

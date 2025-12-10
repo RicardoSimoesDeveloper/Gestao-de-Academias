@@ -1,3 +1,17 @@
+<script setup>
+
+import { router } from '@inertiajs/vue3';
+import SidebarLink from '@/Components/Layout/SidebarLink.vue'; 
+
+defineProps({
+    title: String
+});
+
+const logout = () => {
+    router.post('/logout');
+};
+</script>
+
 <template>
     <div class="min-h-screen bg-gray-100 flex">
         <aside class="w-64 bg-gray-900 text-white flex flex-col fixed h-full transition-all duration-300 z-10">
@@ -59,16 +73,3 @@
     </div>
 </template>
 
-<script setup>
-import { router } from '@inertiajs/vue3';
-// 🚨 Importe o novo componente
-import SidebarLink from '@/Components/Layout/SidebarLink.vue'; 
-
-defineProps({
-    title: String
-});
-
-const logout = () => {
-    router.post('/logout');
-};
-</script>

@@ -1,3 +1,15 @@
+<script setup>
+import { Link } from '@inertiajs/vue3';
+
+defineProps({
+    links: {
+        type: Array,
+        required: true,
+        default: () => []
+    }
+});
+</script>
+
 <template>
     <div v-if="links.length > 3" class="mt-6 flex justify-center">
         <div class="flex flex-wrap -mb-1">
@@ -18,14 +30,3 @@
     </div>
 </template>
 
-<script setup>
-import { Link } from '@inertiajs/vue3';
-
-defineProps({
-    links: {
-        type: Array,
-        required: true,
-        default: () => []
-    }
-});
-</script>

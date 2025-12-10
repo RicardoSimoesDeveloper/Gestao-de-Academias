@@ -1,3 +1,16 @@
+<script setup>
+import { useForm } from '@inertiajs/vue3';
+
+const form = useForm({
+    email: '',
+    password: ''
+});
+
+const submit = () => {
+    form.post('/login');
+};
+</script>
+
 <template>
     <div class="min-h-screen flex flex-col items-center justify-center bg-gray-900">
         <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
@@ -26,16 +39,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-import { useForm } from '@inertiajs/vue3';
-
-const form = useForm({
-    email: '',
-    password: ''
-});
-
-const submit = () => {
-    form.post('/login');
-};
-</script>

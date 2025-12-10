@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AcademiaCentralIndexRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
         return Auth::check();

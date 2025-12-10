@@ -10,19 +10,15 @@ use Inertia\Inertia;
 
 class LoginCentralController extends Controller
 {
-    // Tela de Login
     public function login()
     {
         return Inertia::render('Central/Auth/CentralLogin');
     }
 
-    // Processar Login
-    public function store(LoginCentralRequest $request) // 🚨 Injeta AuthCentralRequest
+    public function store(LoginCentralRequest $request)
     {
-        // O $request->validated() contém apenas os dados validados: email e password.
         $credentials = $request->validated();
 
-        // O Laravel busca 'email' e compara 'password'
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
@@ -34,7 +30,6 @@ class LoginCentralController extends Controller
         ])->onlyInput('email');
     }
 
-    // Sair
     public function destroy(Request $request)
     {
         Auth::logout();

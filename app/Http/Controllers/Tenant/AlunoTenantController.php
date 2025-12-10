@@ -14,16 +14,15 @@ class AlunoTenantController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Aluno::with('plano'); // 🔥 Carrega o plano direto
+        $query = Aluno::with('plano');
 
         $filters = $request->only(['search']);
 
-        // Filtro de busca
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nome', 'LIKE', "%{$search}%")
-                  ->orWhere('cpf', 'LIKE', "{$search}%");
+                    ->orWhere('cpf', 'LIKE', "{$search}%");
             });
         }
 

@@ -1,10 +1,3 @@
-<template>
-    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full uppercase"
-          :class="[statusClass]">
-        {{ formattedStatus }}
-    </span>
-</template>
-
 <script setup>
 import { computed } from 'vue';
 
@@ -26,9 +19,15 @@ const statusClass = computed(() => {
     }
 });
 
-// Formata a string (primeira letra maiúscula)
 const formattedStatus = computed(() => {
     if (!props.status) return '';
     return props.status.charAt(0).toUpperCase() + props.status.slice(1);
 });
 </script>
+
+<template>
+    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full uppercase"
+          :class="[statusClass]">
+        {{ formattedStatus }}
+    </span>
+</template>

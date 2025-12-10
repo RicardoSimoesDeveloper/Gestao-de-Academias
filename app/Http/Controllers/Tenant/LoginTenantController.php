@@ -20,11 +20,6 @@ class LoginTenantController extends Controller
 
     public function store(LoginTenantRequest $request)
     {
-        Log::info('Tentando login', [
-            'credentials' => $request->only('email'),
-            'tenant' => tenant('id'),
-        ]);
-
         $credentials = $request->except('remember');
         $remember = $request->boolean('remember');
 
@@ -33,8 +28,6 @@ class LoginTenantController extends Controller
 
             return redirect()->intended(route('dashboard'));
         }
-
-        Log::info('Falha Auth::attempt');
 
         return back()->withErrors([
             'email' => 'As credenciais fornecidas não correspondem aos nossos registros.',

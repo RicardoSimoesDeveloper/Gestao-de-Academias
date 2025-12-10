@@ -15,21 +15,22 @@ class Aluno extends Model
     protected $primaryKey = 'id';
 
     protected $fillable =
-        [
-            'nome',
-            'cpf',
-            'email',
-            'data_nascimento',
-            'status',
-            'plano_id',
-        ];
+    [
+        'nome',
+        'cpf',
+        'email',
+        'data_nascimento',
+        'status',
+        'plano_id',
+    ];
 
     protected $dates =
-        [
-            'deleted_at',
-        ];
+    [
+        'deleted_at',
+    ];
 
-    protected $casts = [
+    protected $casts = 
+    [
         'data_nascimento' => 'date',
     ];
 

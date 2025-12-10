@@ -1,3 +1,15 @@
+<script setup>
+import CentralLayout from '@/Layouts/CentralLayout.vue';
+import { useForm, Link } from '@inertiajs/vue3';
+
+const form = useForm({
+    id: '',
+    name: '',
+    email_admin: '',
+    senha_admin: ''
+});
+</script>
+
 <template>
     <CentralLayout title="Nova Academia">
         <div class="bg-white p-6 rounded shadow max-w-3xl mx-auto">
@@ -68,15 +80,3 @@
         </div>
     </CentralLayout>
 </template>
-
-<script setup>
-import CentralLayout from '@/Layouts/CentralLayout.vue'; // <--- Importe o layout
-import { useForm, Link } from '@inertiajs/vue3';
-
-const form = useForm({
-    id: '',
-    name: '',
-    email_admin: '',
-    senha_admin: ''
-});
-</script>

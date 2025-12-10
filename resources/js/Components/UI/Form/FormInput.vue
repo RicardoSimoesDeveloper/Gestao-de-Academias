@@ -1,3 +1,28 @@
+<script setup>
+// Evita que atributos não definidos como props sejam aplicados ao div raiz.
+defineOptions({
+  inheritAttrs: false
+})
+
+defineProps({
+    modelValue: [String, Number, null],
+    id: String,
+    type: {
+        type: String,
+        default: 'text'
+    },
+    label: String,
+    placeholder: String,
+    error: String,
+    required: {
+        type: Boolean,
+        default: false
+    }
+});
+
+defineEmits(['update:modelValue']);
+</script>
+
 <template>
     <div>
         <label v-if="label" :for="id" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -25,27 +50,3 @@
     </div>
 </template>
 
-<script setup>
-// Evita que atributos não definidos como props sejam aplicados ao div raiz.
-defineOptions({
-  inheritAttrs: false
-})
-
-defineProps({
-    modelValue: [String, Number, null], // O valor que será sync com v-model
-    id: String,
-    type: {
-        type: String,
-        default: 'text'
-    },
-    label: String,
-    placeholder: String,
-    error: String, // Erro de validação do Inertia
-    required: {
-        type: Boolean,
-        default: false
-    }
-});
-
-defineEmits(['update:modelValue']);
-</script>

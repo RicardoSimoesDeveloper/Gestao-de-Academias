@@ -1,3 +1,26 @@
+
+<script setup>
+import { useForm, Head } from '@inertiajs/vue3'; 
+
+defineProps({
+    academia: String
+});
+
+const formulario = useForm({
+    email: '',
+    password: '', 
+});
+
+const enviarFormulario = () => {
+    formulario.post('/login', {
+        onFinish: () => formulario.reset('password'),
+        onError: (errors) => {
+            console.error('Falha na submissão:', errors);
+        },
+    });
+};
+</script>
+
 <template>
     <Head title="Acesso da Academia" />
     
@@ -55,25 +78,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-import { useForm, Head } from '@inertiajs/vue3'; 
-
-defineProps({
-    academia: String
-});
-
-const formulario = useForm({
-    email: '',
-    password: '', 
-});
-
-const enviarFormulario = () => {
-    formulario.post('/login', {
-        onFinish: () => formulario.reset('password'),
-        onError: (errors) => {
-            console.error('Falha na submissão:', errors);
-        },
-    });
-};
-</script>
