@@ -21,7 +21,7 @@ class AcademiaCentralController extends Controller
 
             $query->where(function ($q) use ($search) {
                 $q->where('id', 'LIKE', "{$search}%")
-                    ->orWhere('name', 'LIKE', "{$search}%");
+                    ->orWhere('nome', 'LIKE', "{$search}%");
             });
         }
 

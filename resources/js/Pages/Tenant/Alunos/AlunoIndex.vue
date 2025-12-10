@@ -87,29 +87,20 @@ const destroy = (aluno) => {
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="p-4 border-b font-semibold text-gray-600">ID</th>
                             <th class="p-4 border-b font-semibold text-gray-600">Nome</th>
                             <th class="p-4 border-b font-semibold text-gray-600">Email</th>
                             <th class="p-4 border-b font-semibold text-gray-600">CPF</th>
-
-                            <!-- NOVA COLUNA DO PLANO -->
                             <th class="p-4 border-b font-semibold text-gray-600">Plano</th>
-
                             <th class="p-4 border-b font-semibold text-gray-600">Status</th>
                             <th class="p-4 border-b font-semibold text-gray-600 text-right">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="aluno in alunos.data" :key="aluno.id" class="hover:bg-gray-50 border-b last:border-0">
-                            <td class="p-4 text-gray-500 text-sm">#{{ aluno.id }}</td>
                             <td class="p-4 font-medium text-gray-800">{{ aluno.nome }}</td>
                             <td class="p-4 text-gray-600">{{ aluno.email }}</td>
                             <td class="p-4 text-gray-600">{{ aluno.cpf }}</td>
-
-                            <!-- MOSTRAR O NOME DO PLANO -->
-                            <td class="p-4 text-gray-600">
-                                {{ aluno.plano?.nome ?? '—' }}
-                            </td>
+                            <td class="p-4 text-gray-600">{{ aluno.plano?.nome ?? '—' }}</td>
 
                             <td class="p-4">
                                 <StatusBadge :status="aluno.status" />

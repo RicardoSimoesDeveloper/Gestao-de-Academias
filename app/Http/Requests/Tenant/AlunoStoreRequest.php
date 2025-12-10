@@ -18,7 +18,7 @@ class AlunoStoreRequest extends FormRequest
             'nome' => ['required', 'string', 'max:30'],
             'email' => ['required', 'email', 'max:255', 'unique:alunos,email'],
             'cpf' => ['nullable', 'string', 'max:14', 'unique:alunos,cpf'],
-            'data_nascimento' => ['nullable', 'date'],
+            'data_nascimento' => ['nullable', 'date', 'before_or_equal:today'],
             'status' => ['required', 'string', 'in:ativo,inativo,suspenso'],
             'plano_id' => ['nullable', 'exists:planos,id'],
         ];
@@ -39,6 +39,7 @@ class AlunoStoreRequest extends FormRequest
             'cpf.max' => 'O CPF pode ter no máximo 14 caracteres.',
 
             'data_nascimento.date' => 'A Data de Nascimento deve ser uma data válida.',
+            'data_nascimento.before_or_equal' => 'A Data de Nascimento não pode ser uma data futura.',
 
             'status.required' => 'O Status do Aluno é obrigatório.',
             'status.in' => 'O Status do Aluno deve ser um dos seguintes valores: ativo, inativo, suspenso.',

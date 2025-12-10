@@ -69,7 +69,6 @@ const confirmarExclusao = (tenant) => {
             <table class="w-full text-left border-collapse">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="p-4 border-b font-semibold text-gray-600">ID</th>
                         <th class="p-4 border-b font-semibold text-gray-600">Nome da Unidade</th>
                         <th class="p-4 border-b font-semibold text-gray-600">Domínio</th>
                         <th class="p-4 border-b font-semibold text-gray-600">Plano</th>
@@ -78,7 +77,6 @@ const confirmarExclusao = (tenant) => {
                 </thead>
                 <tbody>
                     <tr v-for="tenant in tenants.data" :key="tenant.id" class="hover:bg-gray-50 border-b last:border-0">
-                        <td class="p-4 text-gray-500 text-sm">#{{ tenant.id }}</td>
                         <td class="p-4 font-medium text-gray-800">{{ tenant.name }}</td> 
                         <td class="p-4">
                             <a v-if="tenant.domains && tenant.domains.length > 0" 
