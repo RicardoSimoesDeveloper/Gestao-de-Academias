@@ -6,6 +6,7 @@ use App\Http\Controllers\Central\LoginCentralController;
 use App\Http\Controllers\Central\RelatorioCentralController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LandingPageController;
 
 $appDomain = env('APP_DOMAIN');
 
@@ -19,6 +20,8 @@ Route::domain($appDomain)->group(function () {
 
         return redirect()->route('central.login');
     });
+
+    Route::get('/', [LandingPageController::class, 'index'])->name('central.landing');
 
     Route::get('/login', [LoginCentralController::class, 'login'])->name('central.login');
     Route::post('/login', [LoginCentralController::class, 'store']);
