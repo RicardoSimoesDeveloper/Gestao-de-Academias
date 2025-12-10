@@ -19,7 +19,7 @@ class TenantSeeder extends Seeder
         $this->createTenant(
             id: 'academia1',
             name: 'Academia Sportfit',
-            email_admin: 'academia1@gmail.com.com',
+            email_admin: 'academia1@gmail.com',
             senha_admin: '123456',
             appDomain: $appDomain
         );
