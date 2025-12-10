@@ -62,7 +62,7 @@ Cada academia (Tenant) possui **banco de dados isolado**, garantindo **seguranç
 ---
 
 ## 📦 Estrutura do Projeto
-
+```bash
 app/
 ├── Http/
 │ ├── Controllers/
@@ -83,7 +83,7 @@ routes/
 ├── web.php
 └── tenant.php
 
-
+```
 ---
 
 ## 🛠 Instalação e Configuração
@@ -102,23 +102,29 @@ Clone o projeto e instale dependências:
 ```bash
 git clone [URL_DO_REPOSITORIO]
 cd [NOME_DO_PROJETO]
+```
 
+```bash
 composer install
-npm install
+```
 
+```bash
+npm install
+```
 
 Configure o arquivo .env:
-
+```bash
 cp .env.example .env
 php artisan key:generate
-
+```
 
 3️⃣ Configuração do .env
+```bash
 DB_DATABASE=academia_central
 APP_URL=http://aplicacao.local:8000
 APP_DOMAIN=aplicacao.local
 TENANT_DB_USERNAME=root
-
+```
 
 🌐 Configuração de Domínios Locais
 
@@ -127,47 +133,52 @@ Adicione entradas no arquivo hosts do seu sistema:
 Windows: C:\Windows\System32\drivers\etc\hosts
 
 Linux/Mac: /etc/hosts
-
+```bash
 127.0.0.1 aplicacao.local
 127.0.0.1 academia1.aplicacao.local
 127.0.0.1 academia2.aplicacao.local
-
+```
 
 🗄 Banco de Dados e Migrações
 Criar banco central
-
+```bash
 CREATE DATABASE academia_central;
+```
 
 Rodar migrações e seeds
+```bash
 php artisan migrate
 php artisan db:seed --class=CentralUserSeeder
 php artisan db:seed --class=TenantSeeder
+```
 
 Credenciais padrão do painel central:
 
 Email: admin@aplicacao.local
-
 Senha: 123456
 
 ▶️ Executando o Projeto
 Backend (Laravel)
+```bash
 php artisan serve
-
+```
 
 Frontend (Vite)
-
+```bash
 npm run dev
+```
 
 🔐 Acesso ao Sistema
 Painel Central (Admin)
-
+```bash
 URL: http://aplicacao.local:8000
-
+```
 Login: admin@aplicacao.local / 123456
-
 Painel da Academia (Tenant)
 
+```bash
 URL: http://academia1.aplicacao.local:8000
+```
 
 Use contas criadas no banco do tenant.
 
