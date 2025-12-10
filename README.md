@@ -141,7 +141,7 @@ Windows: C:\Windows\System32\drivers\etc\hosts
 
 Linux/Mac: /etc/hosts
 ```bash
-127.0.0.1 aplicacao.local/login
+127.0.0.1 aplicacao.local
 127.0.0.1 academia1.aplicacao.local
 127.0.0.1 academia2.aplicacao.local
 ```
