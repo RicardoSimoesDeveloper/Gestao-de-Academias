@@ -124,6 +124,13 @@ DB_DATABASE=academia_central
 APP_URL=http://aplicacao.local:8000
 APP_DOMAIN=aplicacao.local
 TENANT_DB_USERNAME=root
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=gestao_central
+DB_USERNAME=seu_username
+DB_PASSWORD=sua_senha
 ```
 
 🌐 Configuração de Domínios Locais
