@@ -196,11 +196,11 @@ Senha: 123456
 
 Credenciais para Tenant
 ```bash
-Academia1:  academia1.aplicacao.local
+Academia1: http://academia1.aplicacao.local:8000
 email: academia1@gmail.com
 senha: 123456
 
-Academia2:  academia2.aplicacao.local
+Academia2: http://academia2.aplicacao.local:8000
 email: academia2@gmail.com
 senha: 123456
 ```
