@@ -7,9 +7,9 @@
 ![Multi-Tenant](https://img.shields.io/badge/Multi--Tenant-Stancl%2FTenancy-orange?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-Um moderno **Sistema de Gestão de Academias** desenvolvido em **Laravel 12**, com arquitetura **Multi-Tenant (bancos separados)** utilizando `stancl/tenancy`, e frontend em **Vue 3 + Inertia.js**.
+Um moderno **Sistema de Gestão de Academias** desenvolvido em **Laravel 12**, com arquitetura **Multi-Tenant** utilizando `stancl/tenancy` e frontend em **Vue 3 + Inertia.js**.
 
-Cada academia (Tenant) possui seu **próprio banco de dados isolado**, garantindo segurança, escalabilidade e alta performance para um ambiente SaaS.
+Cada academia (Tenant) possui **banco de dados isolado**, garantindo **segurança, escalabilidade e alta performance** para ambientes SaaS.
 
 ---
 
@@ -18,10 +18,10 @@ Cada academia (Tenant) possui seu **próprio banco de dados isolado**, garantind
 - [✨ Recursos](#-recursos)
 - [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
 - [📦 Estrutura do Projeto](#-estrutura-do-projeto)
-- [🛠 Como Instalar e Rodar](#-como-instalar-e-rodar)
+- [🛠 Instalação e Configuração](#-instalação-e-configuração)
 - [🌐 Configuração de Domínios Locais](#-configuração-de-domínios-locais)
 - [🗄 Banco de Dados e Migrações](#-banco-de-dados-e-migrações)
-- [▶️ Execução do Projeto](#️-execução-do-projeto)
+- [▶️ Executando o Projeto](#️-executando-o-projeto)
 - [🔐 Acesso ao Sistema](#-acesso-ao-sistema)
 - [📂 Estrutura de Pastas](#-estrutura-de-pastas)
 - [🤝 Contribuição](#-contribuição)
@@ -43,19 +43,19 @@ Cada academia (Tenant) possui seu **próprio banco de dados isolado**, garantind
 
 ## 🚀 Tecnologias Utilizadas
 
-### **Backend**
+### Backend
 - Laravel **12.x**
 - PHP **8.2+**
 - Stancl/Tenancy
 - MySQL
 
-### **Frontend**
+### Frontend
 - Vue.js 3
 - Inertia.js
 - Vite
-- Tailwind
+- TailwindCSS
 
-### **Outros**
+### Outras ferramentas
 - Composer
 - Node.js / npm
 
@@ -68,17 +68,17 @@ app/
 │ ├── Controllers/
 │ │ ├── Central/
 │ │ └── Tenant/
-| ├── Requests/
-│ │ ├── Central/
-│ │ └── Tenant/
+│ └── Requests/
+│ ├── Central/
+│ └── Tenant/
 ├── Models/
 resources/
 ├── js/
-│ └── Components/
-│ └── Layouts/
-│ ├── Pages/
-│ │ ├── Central/
-│ │ └── Tenant/
+│ ├── Components/
+│ ├── Layouts/
+│ └── Pages/
+│ ├── Central/
+│ └── Tenant/
 routes/
 ├── web.php
 └── tenant.php
@@ -86,93 +86,105 @@ routes/
 
 ---
 
-## 🛠 Como Instalar e Rodar
+## 🛠 Instalação e Configuração
 
 ### 1️⃣ Pré-requisitos
-
-Tenha instalado:
-
+Certifique-se de ter instalado:
 - PHP 8.2+
 - Composer
 - Node.js + npm
 - MySQL
 - Extensões padrão do Laravel 12
 
----
-
 ### 2️⃣ Instalação
+Clone o projeto e instale dependências:
 
-#### **Clone o projeto**
-
+```bash
 git clone [URL_DO_REPOSITORIO]
 cd [NOME_DO_PROJETO]
 
-Instale dependências
 composer install
 npm install
 
 
-Configure o .env
+Configure o arquivo .env:
+
 cp .env.example .env
 php artisan key:generate
 
-3️⃣ Configuração do .env
 
-DB_DATABASE	academia_central	
-APP_URL	http://aplicacao.local:8000
-APP_DOMAIN	aplicacao.local
-TENANT_DB_USERNAME	root
+3️⃣ Configuração do .env
+DB_DATABASE=academia_central
+APP_URL=http://aplicacao.local:8000
+APP_DOMAIN=aplicacao.local
+TENANT_DB_USERNAME=root
+
 
 🌐 Configuração de Domínios Locais
 
-Edite seu arquivo hosts:
+Adicione entradas no arquivo hosts do seu sistema:
 
 Windows: C:\Windows\System32\drivers\etc\hosts
-Linux: /etc/hosts
+
+Linux/Mac: /etc/hosts
 
 127.0.0.1 aplicacao.local
 127.0.0.1 academia1.aplicacao.local
 127.0.0.1 academia2.aplicacao.local
 
+
 🗄 Banco de Dados e Migrações
-Criar banco central:
+Criar banco central
 
-Crie o banco academia_central.
+CREATE DATABASE academia_central;
 
-Rodar migrações centrais:
+Rodar migrações e seeds
 php artisan migrate
-
-Rodar seeds para criar usuario central e 2 Tenants:
 php artisan db:seed --class=CentralUserSeeder
 php artisan db:seed --class=TenantSeeder
 
-Credenciais padrão:
+Credenciais padrão do painel central:
 
 Email: admin@aplicacao.local
 
 Senha: 123456
 
-▶️ Execução do Projeto
+▶️ Executando o Projeto
 Backend (Laravel)
 php artisan serve
 
+
 Frontend (Vite)
+
 npm run dev
 
 🔐 Acesso ao Sistema
 Painel Central (Admin)
-http://aplicacao.local:8000
 
+URL: http://aplicacao.local:8000
 
-Login:
-
-admin@aplicacao.local
-
-password: 123456
+Login: admin@aplicacao.local / 123456
 
 Painel da Academia (Tenant)
-http://corpus.aplicacao.local:8000 ou acesse direto pelo link no menu Academias
+
+URL: http://academia1.aplicacao.local:8000
+
 Use contas criadas no banco do tenant.
 
+📂 Estrutura de Pastas
+
+app/Http/Controllers/Central → Controllers do painel central
+
+app/Http/Controllers/Tenant → Controllers do painel da academia
+
+resources/js/Components → Componentes Vue reutilizáveis
+
+resources/js/Layouts → Layouts do frontend
+
+resources/js/Pages → Páginas do sistema (Central / Tenant)
+
+routes/web.php → Rotas do painel central
+
+routes/tenant.php → Rotas dos tenants
 
 
