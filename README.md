@@ -204,6 +204,9 @@ Academia2: http://academia2.aplicacao.local:8000
 email: academia2@gmail.com
 senha: 123456
 ```
+Agora está pronto para uso, no painel geral se criar uma academia(tenant) 
+já é criado seu banco dinamicamente e o dominio de acesso. Lembre-se que o dominio tem que ser colocar no arquivo Hosts.
+Cada academia(tenant) tem seu banco isolado.
 
 📂 Estrutura de Pastas
 
