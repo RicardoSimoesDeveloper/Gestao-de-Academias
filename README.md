@@ -179,13 +179,13 @@ npm run dev
 🔐 Acesso ao Sistema
 Painel Central (Admin)
 ```bash
-URL: http://aplicacao.local:8000/login
+ttp://aplicacao.local:8000/login
 ```
 
 Painel da Academia (Tenant)
 
 ```bash
-URL: http://academia1.aplicacao.local:8000
+http://academia1.aplicacao.local:8000
 ```
 
 Use contas criadas no banco do tenant.
