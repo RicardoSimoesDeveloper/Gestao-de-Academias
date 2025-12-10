@@ -182,6 +182,8 @@ URL: http://academia1.aplicacao.local:8000
 
 Use contas criadas no banco do tenant.
 
+
+
 📂 Estrutura de Pastas
 
 app/Http/Controllers/Central → Controllers do painel central
