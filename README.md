@@ -195,6 +195,7 @@ Email: admin@central.com
 Senha: 123456
 
 Credenciais para Tenant
+```bash
 Academia1:  academia1.aplicacao.local
 email: academia1@gmail.com
 senha: 123456
@@ -202,7 +203,7 @@ senha: 123456
 Academia2:  academia2.aplicacao.local
 email: academia2@gmail.com
 senha: 123456
-
+```
 
 📂 Estrutura de Pastas
 
