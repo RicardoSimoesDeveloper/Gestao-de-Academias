@@ -141,11 +141,17 @@ Windows: C:\Windows\System32\drivers\etc\hosts
 
 Linux/Mac: /etc/hosts
 ```bash
-127.0.0.1 aplicacao.local
+127.0.0.1 aplicacao.local/login
 127.0.0.1 academia1.aplicacao.local
 127.0.0.1 academia2.aplicacao.local
 ```
-
+em caso de criação de novos tenants adicionar o nome da aplicaçao no arquivo Hosts
+por exemplo:
+Criou um novo Tenant com nome (id) = ironberg
+adicionar no host:
+```bash
+127.0.0.1 ironberg.aplicacao.local
+```
 🗄 Banco de Dados e Migrações
 Criar banco central
 ```bash
@@ -158,11 +164,6 @@ php artisan migrate
 php artisan db:seed --class=CentralUserSeeder
 php artisan db:seed --class=TenantSeeder
 ```
-
-Credenciais padrão do painel central:
-
-Email: admin@aplicacao.local
-Senha: 123456
 
 ▶️ Executando o Projeto
 Backend (Laravel)
@@ -178,9 +179,9 @@ npm run dev
 🔐 Acesso ao Sistema
 Painel Central (Admin)
 ```bash
-URL: http://aplicacao.local:8000
+URL: http://aplicacao.local:8000/login
 ```
-Login: admin@aplicacao.local / 123456
+
 Painel da Academia (Tenant)
 
 ```bash
@@ -189,6 +190,19 @@ URL: http://academia1.aplicacao.local:8000
 
 Use contas criadas no banco do tenant.
 
+Credenciais padrão do painel central:
+
+Email: admin@central.com
+Senha: 123456
+
+Credenciais para Tenant
+Academia1:  academia1.aplicacao.local
+email: academia1@gmail.com
+senha: 123456
+
+Academia2:  academia2.aplicacao.local
+email: academia2@gmail.com
+senha: 123456
 
 
 📂 Estrutura de Pastas
